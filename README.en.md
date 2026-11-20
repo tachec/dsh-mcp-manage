@@ -49,12 +49,10 @@ Discovery paths are adapted per platform (Windows, macOS, Linux); missing applic
 1. Open **Plugins** in the left sidebar.
 2. Choose **Add plugin**.
 3. Use one of:
-   - GitHub: `github:<your-name>/dsh-mcp-hub`
+   - GitHub: `github:tachec/dsh-mcp-hub`
    - a local checkout: absolute directory path
-   - your own scoped npm package name once published (for example `@your-name/dsh-mcp-hub`)
+   - your own scoped npm package name once published (for example `@tachec/dsh-mcp-hub`)
 4. Install, enable the bundle, then reopen Settings.
-
-> **Note:** the npm name `dsh-mcp-hub` is reserved by someone else and is **not this project**. This project is installed from GitHub or a local directory; if you publish it later, use your own scope and update this page.
 
 ### CLI
 
