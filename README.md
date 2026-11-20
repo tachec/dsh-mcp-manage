@@ -50,17 +50,15 @@
 1. 打开侧栏的 **插件** 页。
 2. 点击 **添加插件**。
 3. 填入以下任一来源：
-   - GitHub 仓库：`github:<你的GitHub用户名>/dsh-mcp-hub`
+   - GitHub 仓库：`github:tachec/dsh-mcp-hub`
    - 本地目录：本仓库的绝对路径
-   - 发布到你自己的 npm scope 后，也可填该包名（例如 `@你的名字/dsh-mcp-hub`）
+   - 发布到你自己的 npm scope 后，也可填该包名（例如 `@tachec/dsh-mcp-hub`）
 4. 安装并启用 bundle，然后重新打开设置面板。
-
-> **注意：** npm 上的 `dsh-mcp-hub` 已被他人预留，**不是本项目**。本项目目前通过 GitHub 或本地目录安装；如果以后发布 npm 包，请使用自己的 scope，并更新这里。
 
 ### 使用 CLI
 
 ```powershell
-dsh plugin --profile web add github:<你的GitHub用户名>/dsh-mcp-hub
+dsh plugin --profile web add github:tachec/dsh-mcp-hub
 ```
 
 > Desktop 的 `desktop` profile 由桌面端托管，CLI 不允许直接修改；请在侧栏的 **插件** 页里安装。
