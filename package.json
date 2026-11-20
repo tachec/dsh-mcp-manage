@@ -1,0 +1,53 @@
+{
+  "name": "dsh-mcp-hub",
+  "version": "1.1.0",
+  "description": "Manage every MCP server in DeepSeek Harness from Settings: add, edit, delete, enable, disable, probe, restart, form or JSON entry, static rows, import from other MCP tools, and an optional sidebar shortcut.",
+  "license": "MIT",
+  "author": "dsh-mcp-hub contributors",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "README.en.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test/host-smoke.mjs && node test/client-render-smoke.mjs",
+    "check": "node --check index.js && node --check client.js"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "mcp",
+    "model-context-protocol",
+    "mcp-manager",
+    "settings"
+  ],
+  "engines": {
+    "node": ">=22",
+    "dsh": ">=0.2.2-rc.1 <0.3.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  }
+}

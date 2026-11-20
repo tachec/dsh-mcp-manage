@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "MCP 中心",
+    "description": "在「设置 → MCP」集中管理这个 Harness 能使用的全部 MCP 服务器：用表单或粘贴 JSON 添加 stdio 或 Streamable HTTP 服务器，随后编辑、启停、探测、重启和删除。页面同时列出 profile 中静态配置的服务器，以及本机 Claude、Cursor、VS Code、Windsurf、Cline、Claude Code 中已有的 MCP 服务器，可一键导入。页面上的开关可决定是否在 DSH 左侧栏显示 MCP 快捷入口，点击直接打开独立的 MCP 管理页。修改写入当前 profile，立即生效。"
+  }
+}
