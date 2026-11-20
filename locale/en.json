@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "MCP hub",
+    "title": "MCP manager",
     "description": "Manage every MCP server this Harness can use, in Settings → MCP. Add a stdio or Streamable HTTP server with a form or pasted JSON, then edit, enable or disable, probe, restart and remove it. The page also lists servers configured statically in the profile and MCP servers found in Claude, Cursor, VS Code, Windsurf, Cline and Claude Code on this machine, with one-click import. A switch controls whether an MCP shortcut appears in the DSH sidebar and opens the management page directly. Changes are written to this profile and take effect immediately."
   }
 }

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.0 — 2026-11-21
+
+### Changed
+
+- Renamed the package, bundle row, management route, settings section, main
+  panel key, sidebar entry and preference directory from `dsh-mcp-hub` to
+  `dsh-mcp-manage`.
+- Repository metadata now points at
+  `https://github.com/tachec/dsh-mcp-manage`; the README install paths and the
+  community submission entry use the new name.
+- The plugin list title is now **MCP manager / MCP 管理**.
+
 ## 1.1.0 — 2026-11-20
 
 ### Added

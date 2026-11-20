@@ -1,9 +1,17 @@
 {
-  "name": "dsh-mcp-hub",
-  "version": "1.1.0",
+  "name": "dsh-mcp-manage",
+  "version": "1.2.0",
   "description": "Manage every MCP server in DeepSeek Harness from Settings: add, edit, delete, enable, disable, probe, restart, form or JSON entry, static rows, import from other MCP tools, and an optional sidebar shortcut.",
   "license": "MIT",
-  "author": "dsh-mcp-hub contributors",
+  "author": "tachec",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tachec/dsh-mcp-manage.git"
+  },
+  "homepage": "https://github.com/tachec/dsh-mcp-manage#readme",
+  "bugs": {
+    "url": "https://github.com/tachec/dsh-mcp-manage/issues"
+  },
   "type": "module",
   "exports": {
     ".": "./index.js",

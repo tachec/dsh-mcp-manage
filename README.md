@@ -1,4 +1,4 @@
-# dsh-mcp-hub
+# dsh-mcp-manage
 
 **中文** · [English](README.en.md)
 
@@ -26,7 +26,7 @@
 - **左侧栏快捷入口**
   - 页面上一键开关是否在 DSH 左侧栏显示 MCP 图标；
   - 点击图标直接打开独立的 MCP 管理页；
-  - 选择保存到 `$DSH_HOME/dsh-mcp-hub/preferences.json`。
+  - 选择保存到 `$DSH_HOME/dsh-mcp-manage/preferences.json`。
 - **界面**
   - 跟随 DSH 明暗主题与设计令牌；
   - 原生 `<dialog>` 弹窗、键盘可操作、表单控件带可访问名称；
@@ -50,20 +50,22 @@
 1. 打开侧栏的 **插件** 页。
 2. 点击 **添加插件**。
 3. 填入以下任一来源：
-   - GitHub 仓库：`github:tachec/dsh-mcp-hub`
+   - GitHub 仓库：`github:tachec/dsh-mcp-manage`
    - 本地目录：本仓库的绝对路径
-   - 发布到你自己的 npm scope 后，也可填该包名（例如 `@tachec/dsh-mcp-hub`）
+   - 发布到你自己的 npm scope 后，也可填该包名（例如 `@tachec/dsh-mcp-manage`）
 4. 安装并启用 bundle，然后重新打开设置面板。
+
+> **注意：** npm 上的 `dsh-mcp-manage` 已被他人预留，**不是本项目**。本项目目前通过 GitHub 或本地目录安装；如果以后发布 npm 包，请使用自己的 scope，并更新这里。
 
 ### 使用 CLI
 
 ```powershell
-dsh plugin --profile web add github:tachec/dsh-mcp-hub
+dsh plugin --profile web add github:tachec/dsh-mcp-manage
 ```
 
 > Desktop 的 `desktop` profile 由桌面端托管，CLI 不允许直接修改；请在侧栏的 **插件** 页里安装。
 
-安装后，插件行会出现在侧栏 **插件** 页的插件列表中，标题为 **MCP 中心 / MCP hub**。
+安装后，插件行会出现在侧栏 **插件** 页的插件列表中，标题为 **MCP 管理 / MCP manager**。
 
 ## 快速开始
 
@@ -169,7 +171,7 @@ Claude Desktop / Cursor 的格式可以直接粘贴（支持一次添加多个�
 
 - 打开：图标出现在侧栏，点击直接打开 MCP 管理页；
 - 关闭：图标立即移除；
-- 选择写入 `$DSH_HOME/dsh-mcp-hub/preferences.json`，刷新或重启后保持；
+- 选择写入 `$DSH_HOME/dsh-mcp-manage/preferences.json`，刷新或重启后保持；
 - 关闭图标后，仍可从 **设置 → MCP** 进入本页重新打开。
 
 ## 数据与写入位置
@@ -178,14 +180,14 @@ Claude Desktop / Cursor 的格式可以直接粘贴（支持一次添加多个�
 | --- | --- |
 | 托管服务器配置 | 当前 profile 的 `cordis.patch.yml`（`mcp-manager` 行的 `config.servers`） |
 | 静态行配置修改 | 当前 profile 的 `cordis.patch.yml`（对应行的覆盖） |
-| 左侧栏开关偏好 | `$DSH_HOME/dsh-mcp-hub/preferences.json` |
+| 左侧栏开关偏好 | `$DSH_HOME/dsh-mcp-manage/preferences.json` |
 | 插件自身 | 当前 profile 的插件依赖（由 DSH 插件管理器管理） |
 
 所有修改只影响**当前 profile**，不会跨 profile 同步。
 
 ## 安全与隐私
 
-- Host 端只注册一个同源 JSON 路由 `/dsh-mcp-hub/api`，每个请求都经过 DSH 的浏览器会话认证，写请求还要求同源；没有新的端口、没有对外监听。
+- Host 端只注册一个同源 JSON 路由 `/dsh-mcp-manage/api`，每个请求都经过 DSH 的浏览器会话认证，写请求还要求同源；没有新的端口、没有对外监听。
 - 插件**不注册任何模型可见的工具**；所有操作都由用户在设置页触发。
 - 页面会以明文展示已配置的环境变量和请求头（这是管理面所必需的）。密钥请使用 `${credential:REF}` 模板，让 DSH 的凭据服务在运行时解析，而不是把明文写进配置。
 - 导入功能只读取本机其他应用的配置文件，不写入、不上传。
@@ -206,7 +208,7 @@ Claude Desktop / Cursor 的格式可以直接粘贴（支持一次添加多个�
 本插件是**免构建**的普通 DSH bundle：Host 端 `index.js`、浏览器端 `client.js` 直接以源码加载，没有打包步骤。
 
 ```text
-dsh-mcp-hub/
+dsh-mcp-manage/
 ├── index.js            # Host：认证路由、配置读写、静态行与偏好
 ├── client.js           # 浏览器：设置页、主面板、对话框、样式
 ├── cordis.patch.yml    # bundle 行

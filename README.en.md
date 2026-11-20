@@ -1,4 +1,4 @@
-# dsh-mcp-hub
+# dsh-mcp-manage
 
 **English** · [中文](README.md)
 
@@ -25,7 +25,7 @@ The plugin registers a management page under **Settings → MCP** and optionally
 - **Sidebar shortcut**
   - a switch shows or hides an MCP entry in the DSH sidebar;
   - the entry opens the manager as a global main panel;
-  - the choice is stored in `$DSH_HOME/dsh-mcp-hub/preferences.json`.
+  - the choice is stored in `$DSH_HOME/dsh-mcp-manage/preferences.json`.
 - **UI**
   - follows the DSH theme tokens and light/dark palettes;
   - native modal `<dialog>`, keyboard support, labelled controls;
@@ -49,20 +49,22 @@ Discovery paths are adapted per platform (Windows, macOS, Linux); missing applic
 1. Open **Plugins** in the left sidebar.
 2. Choose **Add plugin**.
 3. Use one of:
-   - GitHub: `github:tachec/dsh-mcp-hub`
+   - GitHub: `github:tachec/dsh-mcp-manage`
    - a local checkout: absolute directory path
-   - your own scoped npm package name once published (for example `@tachec/dsh-mcp-hub`)
+   - your own scoped npm package name once published (for example `@tachec/dsh-mcp-manage`)
 4. Install, enable the bundle, then reopen Settings.
+
+> **Note:** the npm name `dsh-mcp-manage` is reserved by someone else and is **not this project**. This project is installed from GitHub or a local directory; if you publish it later, use your own scope and update this page.
 
 ### CLI
 
 ```powershell
-dsh plugin --profile web add github:<your-name>/dsh-mcp-hub
+dsh plugin --profile web add github:tachec/dsh-mcp-manage
 ```
 
 > The Desktop app owns the `desktop` profile and refuses CLI changes; install it from the sidebar **Plugins** page there.
 
-The bundle appears on the sidebar **Plugins** page as **MCP hub / MCP 中心**.
+The bundle appears on the sidebar **Plugins** page as **MCP manager / MCP 管理**.
 
 ## Quick start
 
@@ -134,13 +136,13 @@ A base-config server is badged **base config**: it can be disabled but not delet
 | --- | --- |
 | Managed server configuration | current profile's `cordis.patch.yml` (`mcp-manager` row, `config.servers`) |
 | Static row overrides | current profile's `cordis.patch.yml` |
-| Sidebar preference | `$DSH_HOME/dsh-mcp-hub/preferences.json` |
+| Sidebar preference | `$DSH_HOME/dsh-mcp-manage/preferences.json` |
 
 Every change affects only the current profile.
 
 ## Security and privacy
 
-- The Host half serves one authenticated same-origin JSON route, `/dsh-mcp-hub/api`, on the GUI's own web server. No extra port, no public listener.
+- The Host half serves one authenticated same-origin JSON route, `/dsh-mcp-manage/api`, on the GUI's own web server. No extra port, no public listener.
 - No model-facing tool is registered; every operation is user-initiated from the page.
 - Configured environment values and headers are shown to the authenticated owner in plain text. Keep secrets in `${credential:REF}` templates so the DSH credentials service resolves them at runtime.
 - Import reads other applications' MCP files and never writes or uploads them.
@@ -161,7 +163,7 @@ Every change affects only the current profile.
 No build step: the Host half is `index.js`, the browser half is `client.js`, both loaded as source.
 
 ```text
-dsh-mcp-hub/
+dsh-mcp-manage/
 ├── index.js
 ├── client.js
 ├── cordis.patch.yml

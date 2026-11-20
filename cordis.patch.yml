@@ -1,6 +1,6 @@
-# dsh-mcp-hub — one Host row: it serves the management API on the host's own
+# dsh-mcp-manage — one Host row: it serves the management API on the host's own
 # web server and registers no model-facing tool. The browser half is declared
 # by package.json `dsh.client` and registered into Settings → MCP.
 - insert:
-    - id: mcp-hub
-      name: dsh-mcp-hub
+    - id: mcp-manage
+      name: dsh-mcp-manage

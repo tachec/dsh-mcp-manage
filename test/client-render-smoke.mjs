@@ -1,4 +1,4 @@
-// Render smoke test for the dsh-mcp-hub browser half, without a browser:
+// Render smoke test for the dsh-mcp-manage browser half, without a browser:
 // a minimal React stand-in renders component trees so typos and undefined
 // references in the render paths fail here instead of in the settings panel.
 // Run: node test/client-render-smoke.mjs
@@ -55,7 +55,7 @@ const moduleUrl = new URL('../client.js', import.meta.url).href
 await import(moduleUrl)
 
 const registration = globalThis.__hubRegistration
-if (registration === undefined || registration.id !== 'dsh-mcp-hub') throw new Error('client bundle did not register')
+if (registration === undefined || registration.id !== 'dsh-mcp-manage') throw new Error('client bundle did not register')
 
 let dictionary = {}
 const registrations = {}
@@ -92,25 +92,25 @@ const ui = registration.factory((specifier) => {
   if (specifier === 'react') return React
   throw new Error('unexpected require ' + specifier)
 })
-const styleTag = { id: 'dsh-mcp-hub-styles', textContent: 'old rules' }
+const styleTag = { id: 'dsh-mcp-manage-styles', textContent: 'old rules' }
 globalThis.document = {
-  getElementById: (id) => (id === 'dsh-mcp-hub-styles' ? styleTag : null),
+  getElementById: (id) => (id === 'dsh-mcp-manage-styles' ? styleTag : null),
   createElement: () => ({}),
   head: { appendChild() {} },
 }
 ui.apply(ctx)
-if (!styleTag.textContent.includes('.mcp-hub-page') || styleTag.textContent === 'old rules') {
+if (!styleTag.textContent.includes('.mcp-manage-page') || styleTag.textContent === 'old rules') {
   throw new Error('an existing stylesheet tag was not refreshed')
 }
 
-if (registrations['settings.section']?.options?.id !== 'mcp-hub') throw new Error('settings section not registered')
-if (registrations.main?.options?.key !== 'mcp-hub') throw new Error('main panel not registered')
-if (registrations['sidebar.panellist']?.options?.id !== 'mcp-hub') throw new Error('sidebar entry not registered')
+if (registrations['settings.section']?.options?.id !== 'mcp-manage') throw new Error('settings section not registered')
+if (registrations.main?.options?.key !== 'mcp-manage') throw new Error('main panel not registered')
+if (registrations['sidebar.panellist']?.options?.id !== 'mcp-manage') throw new Error('sidebar entry not registered')
 // The switch must add and remove the sidebar entry through the module face.
 ui.__parts.setSidebarShortcut(false)
 if (registrations['sidebar.panellist'] !== undefined) throw new Error('sidebar entry was not removed')
 ui.__parts.setSidebarShortcut(true)
-if (registrations['sidebar.panellist']?.options?.id !== 'mcp-hub') throw new Error('sidebar entry was not restored')
+if (registrations['sidebar.panellist']?.options?.id !== 'mcp-manage') throw new Error('sidebar entry was not restored')
 const registered = registrations['settings.section']
 if (typeof registered.component !== 'function') throw new Error('section component missing')
 
@@ -270,17 +270,17 @@ const state = {
 // 2. Full loaded page
 {
   const result = renderTree(registered.component, {}, { 1: state })
-  assert(result.classes.some((value) => value.includes('mcp-hub')), 'page container renders')
+  assert(result.classes.some((value) => value.includes('mcp-manage')), 'page container renders')
   assert(result.text.includes('github') && result.text.includes('windows'), 'managed and static servers render', result.text)
   assert(result.text.includes('从本机其他应用导入'), 'import section renders')
   assert(result.text.includes('fromCursor'), 'discovered server renders')
   assert(result.text.includes('左侧栏快捷入口'), 'sidebar shortcut switch renders', result.text)
-  assert(result.classes.includes('mcp-hub-card-error') === false, 'no error row by default')
+  assert(result.classes.includes('mcp-manage-card-error') === false, 'no error row by default')
 }
 // 2b. Main panel page
 {
   const result = renderTree(parts.HubPage, {})
-  assert(result.classes.includes('mcp-hub-page'), 'main panel page renders')
+  assert(result.classes.includes('mcp-manage-page'), 'main panel page renders')
   assert(result.text.includes('MCP 服务器'), 'page title renders', result.text)
 }
 // 3. Managed card variants
@@ -310,7 +310,7 @@ const state = {
 // 5. Dialogs
 {
   const add = renderTree(parts.ServerDialog, { mode: 'create', initial: null, staticMode: false, knownNames: [], onClose() {}, onSubmit() {} })
-  assert(add.classes.includes('mcp-hub-dialog'), 'add dialog renders')
+  assert(add.classes.includes('mcp-manage-dialog'), 'add dialog renders')
   assert(add.text.includes('表单') && add.text.includes('JSON') && add.text.includes('stdio'), 'dialog tabs and transport render', add.text)
   const edit = renderTree(parts.ServerDialog, { mode: 'edit', initial: connected, staticMode: false, knownNames: ['github'], onClose() {}, onSubmit() {} })
   assert(edit.text.includes('编辑 github'), 'edit dialog title renders', edit.text)
@@ -332,8 +332,8 @@ const state = {
 }
 // 7. Fields are labelled
 {
-  const withChild = renderTree(parts.Field, { label: '名称', hint: '提示', children: React.createElement('input', { className: 'mcp-hub-input' }) })
-  assert(withChild.classes.includes('mcp-hub-field'), 'field renders')
+  const withChild = renderTree(parts.Field, { label: '名称', hint: '提示', children: React.createElement('input', { className: 'mcp-manage-input' }) })
+  assert(withChild.classes.includes('mcp-manage-field'), 'field renders')
 }
 
 console.log('\nAll client render smoke tests passed.')

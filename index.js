@@ -1,10 +1,10 @@
 /**
- * MCP hub — Host half.
+ * dsh-mcp-manage — Host half.
  *
  * One authenticated same-origin JSON endpoint that the settings page drives:
  *
- *   GET  /dsh-mcp-hub/api   → the complete management snapshot
- *   POST /dsh-mcp-hub/api   → { action, ... } and the snapshot after the change
+ *   GET  /dsh-mcp-manage/api   → the complete management snapshot
+ *   POST /dsh-mcp-manage/api   → { action, ... } and the snapshot after the change
  *
  * Managed servers live in `@deepseek-ai/dsh-mcp-manager`'s volatile
  * `config.servers`; writes go through the settings service, so they are
@@ -22,7 +22,7 @@ import { mkdir, readFile, rename, stat, writeFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { dirname, join } from 'node:path'
 
-const ROUTE = '/dsh-mcp-hub/api'
+const ROUTE = '/dsh-mcp-manage/api'
 const MANAGER_PKG = '@deepseek-ai/dsh-mcp-manager'
 const CLIENT_PKG = '@deepseek-ai/dsh-mcp-client'
 const SERVER_NAME = /^[A-Za-z0-9_-]{1,32}$/
@@ -49,7 +49,7 @@ function preferencesFile() {
   const home = typeof process.env.DSH_HOME === 'string' && process.env.DSH_HOME !== ''
     ? process.env.DSH_HOME
     : join(homedir(), '.dsh')
-  return join(home, 'dsh-mcp-hub', 'preferences.json')
+  return join(home, 'dsh-mcp-manage', 'preferences.json')
 }
 
 /** Read the preference document once, tolerating a missing or broken file. */
@@ -1018,16 +1018,16 @@ async function handle(ctx, request, response) {
   }
 }
 
-export const name = 'dsh-mcp-hub'
+export const name = 'dsh-mcp-manage'
 export const inject = ['webServer']
 
 export function apply(ctx) {
   ctx.effect(
     () => ctx.webServer.register(
       { kind: 'exact', path: ROUTE, handler: (request, response) => handle(ctx, request, response) },
-      'dsh-mcp-hub: management api',
+      'dsh-mcp-manage: management api',
     ),
-    'dsh-mcp-hub: management api route',
+    'dsh-mcp-manage: management api route',
   )
-  ctx.logger?.info?.('dsh-mcp-hub: management api mounted at %s', ROUTE)
+  ctx.logger?.info?.('dsh-mcp-manage: management api mounted at %s', ROUTE)
 }

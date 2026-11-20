@@ -1,10 +1,10 @@
-// Functional smoke test for the dsh-mcp-hub Host half, against a mocked Harness.
+// Functional smoke test for the dsh-mcp-manage Host half, against a mocked Harness.
 // Run: node test/host-smoke.mjs
 import { mkdtemp, readFile as readFileFs, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-const testHome = await mkdtemp(join(tmpdir(), 'mcp-hub-host-'))
+const testHome = await mkdtemp(join(tmpdir(), 'mcp-manage-host-'))
 process.env.DSH_HOME = testHome
 
 const pluginUrl = new URL('../index.js', import.meta.url).href
@@ -133,7 +133,7 @@ const ctx = {
 }
 
 apply(ctx)
-if (routes.length !== 1 || routes[0].path !== '/dsh-mcp-hub/api') throw new Error('route not registered')
+if (routes.length !== 1 || routes[0].path !== '/dsh-mcp-manage/api') throw new Error('route not registered')
 
 function makeRequest(method, body) {
   const buffer = body === undefined ? undefined : Buffer.from(JSON.stringify(body))
@@ -354,7 +354,7 @@ const assert = (condition, label, extra) => {
   assert(initial.data.preferences?.sidebarShortcut === true, 'default sidebar shortcut is on', initial.data.preferences)
   const off = await call('POST', { action: 'preferences', sidebarShortcut: false })
   assert(off.data.ok === true && off.data.state.preferences.sidebarShortcut === false, 'preference off accepted', off.data)
-  const saved = JSON.parse(await readFileFs(join(testHome, 'dsh-mcp-hub', 'preferences.json'), 'utf8'))
+  const saved = JSON.parse(await readFileFs(join(testHome, 'dsh-mcp-manage', 'preferences.json'), 'utf8'))
   assert(saved.sidebarShortcut === false, 'preference persisted to disk', saved)
   const back = await call('GET')
   assert(back.data.preferences.sidebarShortcut === false, 'preference read back', back.data.preferences)

@@ -1,5 +1,5 @@
 /**
- * MCP hub — browser half.
+ * dsh-mcp-manage — browser half.
  *
  * A Settings section (Settings → MCP) that manages every MCP server the
  * Harness can run:
@@ -12,12 +12,12 @@
  *     with one-click import.
  *
  * The Host half owns persistence and validation; this module only renders the
- * snapshot and posts actions to `/dsh-mcp-hub/api`. Plain ModuleLoader bundle:
+ * snapshot and posts actions to `/dsh-mcp-manage/api`. Plain ModuleLoader bundle:
  * no build step, React from the page's module table.
  */
 
 window.__ModuleLoader__.load({
-  id: 'dsh-mcp-hub',
+  id: 'dsh-mcp-manage',
   factory: (require) => {
     const module = { exports: {} }
     const exports = module.exports
@@ -27,13 +27,13 @@ window.__ModuleLoader__.load({
     const h = React.createElement
     const { useCallback, useEffect, useRef, useState } = React
 
-    const name = 'dsh-mcp-hub'
+    const name = 'dsh-mcp-manage'
     const inject = ['slots', 'locale']
     const NS = 'settings.mcpHub'
-    const ROUTE = '/dsh-mcp-hub/api'
+    const ROUTE = '/dsh-mcp-manage/api'
     const NAME_PATTERN = /^[A-Za-z0-9_-]{1,32}$/
     const POLL_MS = 5000
-    const SHORTCUT_KEY = 'dsh-mcp-hub.sidebarShortcut'
+    const SHORTCUT_KEY = 'dsh-mcp-manage.sidebarShortcut'
 
     /** The sidebar preference as this page last saw it; synchronous at boot. */
     function readLocalShortcut() {
@@ -147,7 +147,7 @@ window.__ModuleLoader__.load({
       'notice.refreshed': '已刷新',
       'notice.restartRequired': '已保存，重启 DSH 后生效。',
       'notice.secrets': '环境变量与请求头会明文保存在 profile 中；密钥请使用 ${credential:REF} 模板，由凭据服务解析。',
-      'version.label': '界面版本 1.4',
+      'version.label': '界面版本 1.5',
       'shortcut.title': '左侧栏快捷入口',
       'shortcut.hint': '在 DSH 左侧栏显示 MCP 图标，点击直接打开本页。',
       'confirm.deleteTitle': '删除服务器',
@@ -239,7 +239,7 @@ window.__ModuleLoader__.load({
       'config.off': '关',
       copy: '复制',
       copied: '已复制',
-      'error.http': 'Host 返回了 {status}，MCP 中心的后端可能还没有加载。',
+      'error.http': 'Host 返回了 {status}，MCP 管理页的后端可能还没有加载。',
     }
 
     const en = {
@@ -332,7 +332,7 @@ window.__ModuleLoader__.load({
       'notice.refreshed': 'Refreshed',
       'notice.restartRequired': 'Saved; restart DSH to apply.',
       'notice.secrets': 'Environment values and headers are stored in the profile as plain text; keep secrets in ${credential:REF} templates so the credentials service resolves them.',
-      'version.label': 'UI build 1.4',
+      'version.label': 'UI build 1.5',
       'shortcut.title': 'Sidebar shortcut',
       'shortcut.hint': 'Show an MCP icon in the DSH sidebar that opens this page.',
       'confirm.deleteTitle': 'Delete server',
@@ -424,7 +424,7 @@ window.__ModuleLoader__.load({
       'config.off': 'off',
       copy: 'Copy',
       copied: 'Copied',
-      'error.http': 'The Host answered {status}; the MCP hub backend may not be loaded yet.',
+      'error.http': 'The Host answered {status}; the MCP manager backend may not be loaded yet.',
     }
 
     let translate = (key) => key
@@ -643,8 +643,8 @@ window.__ModuleLoader__.load({
     // =========================================================================
 
     const CSS = `
-.mcp-hub {
-  --mcp-hub-radius: 10px;
+.mcp-manage {
+  --mcp-manage-radius: 10px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -653,15 +653,15 @@ window.__ModuleLoader__.load({
   color: var(--dsw-alias-label-primary, inherit);
   min-width: 0;
 }
-.mcp-hub * { box-sizing: border-box; }
-.mcp-hub h3, .mcp-hub h4 { margin: 0; font-weight: 600; }
-.mcp-hub p { margin: 0; }
-.mcp-hub code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; }
+.mcp-manage * { box-sizing: border-box; }
+.mcp-manage h3, .mcp-manage h4 { margin: 0; font-weight: 600; }
+.mcp-manage p { margin: 0; }
+.mcp-manage code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; }
 
-.mcp-hub-lead { color: var(--dsw-alias-label-secondary, inherit); max-width: 72ch; }
+.mcp-manage-lead { color: var(--dsw-alias-label-secondary, inherit); max-width: 72ch; }
 
 /* The global main panel reuses the same management surface. */
-.mcp-hub-page {
+.mcp-manage-page {
   height: 100%;
   min-height: 0;
   overflow-y: auto;
@@ -670,32 +670,32 @@ window.__ModuleLoader__.load({
      page's own breathing room, matching other main-panel entries. */
   padding: 20px 28px 40px;
 }
-.mcp-hub-page-inner {
+.mcp-manage-page-inner {
   display: flex;
   flex-direction: column;
   gap: 18px;
   width: min(100%, 1040px);
   margin: 0 auto;
 }
-.mcp-hub-page-head { display: flex; align-items: center; gap: 10px; }
-.mcp-hub-page-glyph { display: inline-flex; color: var(--dsw-alias-state-business-primary, var(--dsw-static-blue-600, #2563eb)); }
-.mcp-hub-page-title { margin: 0; font-size: 22px; line-height: 1.25; font-weight: 600; color: var(--dsw-alias-label-primary, inherit); }
+.mcp-manage-page-head { display: flex; align-items: center; gap: 10px; }
+.mcp-manage-page-glyph { display: inline-flex; color: var(--dsw-alias-state-business-primary, var(--dsw-static-blue-600, #2563eb)); }
+.mcp-manage-page-title { margin: 0; font-size: 22px; line-height: 1.25; font-weight: 600; color: var(--dsw-alias-label-primary, inherit); }
 
 /* Page preference row: one switch, host row geometry. */
-.mcp-hub-pref {
+.mcp-manage-pref {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   padding: 11px 14px;
   border: 1px solid var(--dsw-alias-border-l1, rgba(128,128,128,.28));
   border-radius: 12px;
   background: var(--dsw-alias-bg-layer-1, transparent);
 }
-.mcp-hub-pref-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.mcp-manage-pref-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 
-.mcp-hub-toolbar {
+.mcp-manage-toolbar {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
 }
-.mcp-hub-chips { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
-.mcp-hub-chip {
+.mcp-manage-chips { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
+.mcp-manage-chip {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 2px 9px; border-radius: 999px; font-size: 12px;
   border: 1px solid var(--dsw-alias-border-l1, rgba(128,128,128,.28));
@@ -703,11 +703,11 @@ window.__ModuleLoader__.load({
   color: var(--dsw-alias-label-secondary, inherit);
   white-space: nowrap;
 }
-.mcp-hub-chip[data-tone="ok"] { color: var(--dsw-alias-state-success-primary, #2f9e44); }
-.mcp-hub-chip[data-tone="warn"] { color: var(--dsw-alias-state-warn-primary, #b7791f); }
-.mcp-hub-spacer { flex: 1 1 auto; }
+.mcp-manage-chip[data-tone="ok"] { color: var(--dsw-alias-state-success-primary, #2f9e44); }
+.mcp-manage-chip[data-tone="warn"] { color: var(--dsw-alias-state-warn-primary, #b7791f); }
+.mcp-manage-spacer { flex: 1 1 auto; }
 
-.mcp-hub-btn {
+.mcp-manage-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   min-height: 30px; padding: 4px 11px;
   border-radius: 8px; border: 1px solid var(--dsw-alias-border-l2, rgba(128,128,128,.38));
@@ -715,10 +715,10 @@ window.__ModuleLoader__.load({
   cursor: pointer; white-space: nowrap;
   transition: background-color .12s ease, border-color .12s ease;
 }
-.mcp-hub-btn:hover:not(:disabled) { background: color-mix(in srgb, currentColor 8%, transparent); }
-.mcp-hub-btn:active:not(:disabled) { background: color-mix(in srgb, currentColor 13%, transparent); }
-.mcp-hub-btn:disabled { opacity: .5; cursor: default; }
-.mcp-hub-btn[data-variant="primary"] {
+.mcp-manage-btn:hover:not(:disabled) { background: color-mix(in srgb, currentColor 8%, transparent); }
+.mcp-manage-btn:active:not(:disabled) { background: color-mix(in srgb, currentColor 13%, transparent); }
+.mcp-manage-btn:disabled { opacity: .5; cursor: default; }
+.mcp-manage-btn[data-variant="primary"] {
   /* A filled action keeps the plugin's blue identity in both palettes. The
      palette's saturated blue is stable light/dark and takes white ink, while
      brand-primary is a near-white contrast fill in dark mode and would hide
@@ -728,28 +728,28 @@ window.__ModuleLoader__.load({
   border-color: transparent !important;
   color: var(--dsw-alias-label-on-color, #fff) !important;
 }
-.mcp-hub-btn[data-variant="primary"]:hover:not(:disabled) { filter: brightness(.9); }
-.mcp-hub-btn[data-variant="primary"]:active:not(:disabled) { filter: brightness(.82); }
-.mcp-hub-btn[data-variant="danger"] { color: var(--dsw-alias-state-error-primary, #c9342c); border-color: color-mix(in srgb, currentColor 45%, transparent); }
-.mcp-hub-icon-btn {
+.mcp-manage-btn[data-variant="primary"]:hover:not(:disabled) { filter: brightness(.9); }
+.mcp-manage-btn[data-variant="primary"]:active:not(:disabled) { filter: brightness(.82); }
+.mcp-manage-btn[data-variant="danger"] { color: var(--dsw-alias-state-error-primary, #c9342c); border-color: color-mix(in srgb, currentColor 45%, transparent); }
+.mcp-manage-icon-btn {
   display: inline-flex; align-items: center; justify-content: center;
   width: 28px; height: 28px; padding: 0;
   border-radius: 7px; border: 1px solid transparent;
   background: transparent; color: var(--dsw-alias-label-secondary, inherit);
   cursor: pointer;
 }
-.mcp-hub-icon-btn:hover:not(:disabled) { background: color-mix(in srgb, currentColor 10%, transparent); color: var(--dsw-alias-label-primary, inherit); }
-.mcp-hub-icon-btn:disabled { opacity: .4; cursor: default; }
-.mcp-hub-icon-btn[data-tone="danger"]:hover:not(:disabled) { color: var(--dsw-alias-state-error-primary, #c9342c); }
+.mcp-manage-icon-btn:hover:not(:disabled) { background: color-mix(in srgb, currentColor 10%, transparent); color: var(--dsw-alias-label-primary, inherit); }
+.mcp-manage-icon-btn:disabled { opacity: .4; cursor: default; }
+.mcp-manage-icon-btn[data-tone="danger"]:hover:not(:disabled) { color: var(--dsw-alias-state-error-primary, #c9342c); }
 
-.mcp-hub :is(button, input, textarea, select, summary, a):focus-visible {
+.mcp-manage :is(button, input, textarea, select, summary, a):focus-visible {
   outline: 2px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, Highlight));
   outline-offset: 2px;
 }
 
 /* Summary cards */
-.mcp-hub-list { display: flex; flex-direction: column; gap: 10px; }
-.mcp-hub-card {
+.mcp-manage-list { display: flex; flex-direction: column; gap: 10px; }
+.mcp-manage-card {
   display: flex; flex-direction: column; gap: 8px;
   padding: 12px 14px;
   border: 1px solid var(--dsw-alias-border-l1, rgba(128,128,128,.28));
@@ -757,16 +757,16 @@ window.__ModuleLoader__.load({
   background: var(--dsw-alias-bg-layer-1, transparent);
   transition: border-color .12s ease, background-color .12s ease;
 }
-.mcp-hub-card:hover { border-color: var(--dsw-alias-border-l2, rgba(128,128,128,.45)); }
-.mcp-hub-card-head { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; min-width: 0; }
-.mcp-hub-dot { flex: 0 0 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--dsw-alias-state-idle-primary, GrayText); }
-.mcp-hub-dot[data-tone="ok"] { background: var(--dsw-alias-state-success-primary, #2f9e44); }
-.mcp-hub-dot[data-tone="warn"] { background: var(--dsw-alias-state-warn-primary, #b7791f); animation: mcp-hub-pulse 1.4s ease-in-out infinite; }
-.mcp-hub-dot[data-tone="error"] { background: var(--dsw-alias-state-error-primary, #c9342c); }
-@keyframes mcp-hub-pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
-@media (prefers-reduced-motion: reduce) { .mcp-hub-dot[data-tone="warn"] { animation: none; } }
-.mcp-hub-name { font-weight: 600; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 13.5px; }
-.mcp-hub-badge {
+.mcp-manage-card:hover { border-color: var(--dsw-alias-border-l2, rgba(128,128,128,.45)); }
+.mcp-manage-card-head { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; min-width: 0; }
+.mcp-manage-dot { flex: 0 0 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--dsw-alias-state-idle-primary, GrayText); }
+.mcp-manage-dot[data-tone="ok"] { background: var(--dsw-alias-state-success-primary, #2f9e44); }
+.mcp-manage-dot[data-tone="warn"] { background: var(--dsw-alias-state-warn-primary, #b7791f); animation: mcp-manage-pulse 1.4s ease-in-out infinite; }
+.mcp-manage-dot[data-tone="error"] { background: var(--dsw-alias-state-error-primary, #c9342c); }
+@keyframes mcp-manage-pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .mcp-manage-dot[data-tone="warn"] { animation: none; } }
+.mcp-manage-name { font-weight: 600; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 13.5px; }
+.mcp-manage-badge {
   display: inline-flex; align-items: center;
   padding: 0 6px; min-height: 18px; border-radius: 5px;
   font-size: 10.5px; letter-spacing: .04em;
@@ -775,125 +775,125 @@ window.__ModuleLoader__.load({
   background: color-mix(in srgb, currentColor 6%, transparent);
   white-space: nowrap;
 }
-.mcp-hub-badge[data-tone="brand"] { color: var(--dsw-alias-state-business-primary, #4176e6); border-color: color-mix(in srgb, currentColor 40%, transparent); }
-.mcp-hub-badge[data-tone="warn"] { color: var(--dsw-alias-state-warn-primary, #b7791f); border-color: color-mix(in srgb, currentColor 40%, transparent); }
-.mcp-hub-status { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
-.mcp-hub-status[data-tone="ok"] { color: var(--dsw-alias-state-success-primary, #2f9e44); }
-.mcp-hub-status[data-tone="warn"] { color: var(--dsw-alias-state-warn-primary, #b7791f); }
-.mcp-hub-status[data-tone="error"] { color: var(--dsw-alias-state-error-primary, #c9342c); }
-.mcp-hub-status-detail { font-size: 11.5px; color: var(--dsw-alias-label-secondary, inherit); opacity: .85; overflow-wrap: anywhere; word-break: break-word; }
-.mcp-hub-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; flex-wrap: wrap; }
-.mcp-hub-sub { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.mcp-hub-cmd {
+.mcp-manage-badge[data-tone="brand"] { color: var(--dsw-alias-state-business-primary, #4176e6); border-color: color-mix(in srgb, currentColor 40%, transparent); }
+.mcp-manage-badge[data-tone="warn"] { color: var(--dsw-alias-state-warn-primary, #b7791f); border-color: color-mix(in srgb, currentColor 40%, transparent); }
+.mcp-manage-status { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+.mcp-manage-status[data-tone="ok"] { color: var(--dsw-alias-state-success-primary, #2f9e44); }
+.mcp-manage-status[data-tone="warn"] { color: var(--dsw-alias-state-warn-primary, #b7791f); }
+.mcp-manage-status[data-tone="error"] { color: var(--dsw-alias-state-error-primary, #c9342c); }
+.mcp-manage-status-detail { font-size: 11.5px; color: var(--dsw-alias-label-secondary, inherit); opacity: .85; overflow-wrap: anywhere; word-break: break-word; }
+.mcp-manage-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+.mcp-manage-sub { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.mcp-manage-cmd {
   display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   color: var(--dsw-alias-label-secondary, inherit);
   background: color-mix(in srgb, currentColor 5%, transparent);
   padding: 2px 7px; border-radius: 6px; max-width: 100%;
 }
-.mcp-hub-probe { font-size: 12px; padding: 5px 9px; border-radius: 7px; background: color-mix(in srgb, currentColor 6%, transparent); overflow-wrap: anywhere; word-break: break-word; }
-.mcp-hub-probe[data-tone="ok"] { color: var(--dsw-alias-state-success-primary, #2f9e44); }
-.mcp-hub-probe[data-tone="error"] { color: var(--dsw-alias-state-error-primary, #c9342c); }
-.mcp-hub-probe[data-tone="running"] { color: var(--dsw-alias-label-secondary, inherit); }
-.mcp-hub-probe-warn { color: var(--dsw-alias-state-warn-primary, #b7791f); font-size: 11.5px; display: block; }
-.mcp-hub-card-error {
+.mcp-manage-probe { font-size: 12px; padding: 5px 9px; border-radius: 7px; background: color-mix(in srgb, currentColor 6%, transparent); overflow-wrap: anywhere; word-break: break-word; }
+.mcp-manage-probe[data-tone="ok"] { color: var(--dsw-alias-state-success-primary, #2f9e44); }
+.mcp-manage-probe[data-tone="error"] { color: var(--dsw-alias-state-error-primary, #c9342c); }
+.mcp-manage-probe[data-tone="running"] { color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-probe-warn { color: var(--dsw-alias-state-warn-primary, #b7791f); font-size: 11.5px; display: block; }
+.mcp-manage-card-error {
   font-size: 12px; padding: 5px 9px; border-radius: 7px;
   color: var(--dsw-alias-state-error-primary, #c9342c);
   background: color-mix(in srgb, currentColor 8%, transparent);
   overflow-wrap: anywhere; word-break: break-word;
 }
 
-.mcp-hub-more { border-top: 1px dashed var(--dsw-alias-border-l1, rgba(128,128,128,.25)); padding-top: 7px; }
-.mcp-hub-more > summary {
+.mcp-manage-more { border-top: 1px dashed var(--dsw-alias-border-l1, rgba(128,128,128,.25)); padding-top: 7px; }
+.mcp-manage-more > summary {
   display: inline-flex; align-items: center; gap: 5px;
   cursor: pointer; color: var(--dsw-alias-label-secondary, inherit); font-size: 12px;
   list-style: none;
 }
-.mcp-hub-more > summary::-webkit-details-marker { display: none; }
-.mcp-hub-more[open] > summary { margin-bottom: 8px; }
-.mcp-hub-more-grid { display: grid; grid-template-columns: minmax(96px, max-content) minmax(0, 1fr); gap: 4px 14px; font-size: 12px; }
-.mcp-hub-more-grid dt { color: var(--dsw-alias-label-secondary, inherit); }
-.mcp-hub-more-grid dd { margin: 0; min-width: 0; word-break: break-all; }
-.mcp-hub-mono-block {
+.mcp-manage-more > summary::-webkit-details-marker { display: none; }
+.mcp-manage-more[open] > summary { margin-bottom: 8px; }
+.mcp-manage-more-grid { display: grid; grid-template-columns: minmax(96px, max-content) minmax(0, 1fr); gap: 4px 14px; font-size: 12px; }
+.mcp-manage-more-grid dt { color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-more-grid dd { margin: 0; min-width: 0; word-break: break-all; }
+.mcp-manage-mono-block {
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11.5px;
   white-space: pre-wrap; word-break: break-all;
   background: color-mix(in srgb, currentColor 6%, transparent);
   border-radius: 6px; padding: 5px 7px;
 }
-.mcp-hub-tools { display: flex; flex-wrap: wrap; gap: 5px; }
-.mcp-hub-tool {
+.mcp-manage-tools { display: flex; flex-wrap: wrap; gap: 5px; }
+.mcp-manage-tool {
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px;
   padding: 1px 7px; border-radius: 999px;
   border: 1px solid var(--dsw-alias-border-l1, rgba(128,128,128,.3));
   color: var(--dsw-alias-label-secondary, inherit);
 }
-.mcp-hub-tool-more { font-size: 11px; color: var(--dsw-alias-label-secondary, inherit); }
-.mcp-hub-empty-tools { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); }
-.mcp-hub-note { font-size: 12px; color: var(--dsw-alias-state-warn-primary, #b7791f); }
+.mcp-manage-tool-more { font-size: 11px; color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-empty-tools { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-note { font-size: 12px; color: var(--dsw-alias-state-warn-primary, #b7791f); }
 
-.mcp-hub-switch { position: relative; display: inline-flex; flex: 0 0 36px; width: 36px; height: 20px; cursor: pointer; }
-.mcp-hub-switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
-.mcp-hub-switch-track {
+.mcp-manage-switch { position: relative; display: inline-flex; flex: 0 0 36px; width: 36px; height: 20px; cursor: pointer; }
+.mcp-manage-switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+.mcp-manage-switch-track {
   position: absolute; inset: 0; border-radius: 999px;
   background: var(--dsw-alias-border-l2, GrayText);
   transition: background-color .14s ease;
 }
-.mcp-hub-switch-track::after {
+.mcp-manage-switch-track::after {
   content: ""; position: absolute; top: 2px; left: 2px;
   width: 16px; height: 16px; border-radius: 50%;
   background: var(--dsw-alias-bg-base, Canvas);
   transition: transform .14s ease;
 }
-.mcp-hub-switch input:checked + .mcp-hub-switch-track { background: var(--dsw-alias-state-business-primary, var(--dsw-static-blue-600, #2563eb)); }
-.mcp-hub-switch input:checked + .mcp-hub-switch-track::after { transform: translateX(16px); }
-.mcp-hub-switch input:disabled + .mcp-hub-switch-track { opacity: .5; }
-.mcp-hub-switch input:focus-visible + .mcp-hub-switch-track { outline: 2px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, Highlight)); outline-offset: 2px; }
+.mcp-manage-switch input:checked + .mcp-manage-switch-track { background: var(--dsw-alias-state-business-primary, var(--dsw-static-blue-600, #2563eb)); }
+.mcp-manage-switch input:checked + .mcp-manage-switch-track::after { transform: translateX(16px); }
+.mcp-manage-switch input:disabled + .mcp-manage-switch-track { opacity: .5; }
+.mcp-manage-switch input:focus-visible + .mcp-manage-switch-track { outline: 2px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, Highlight)); outline-offset: 2px; }
 
 /* Sections */
-.mcp-hub-section {
+.mcp-manage-section {
   border: 1px solid var(--dsw-alias-border-l1, rgba(128,128,128,.28));
   border-radius: 12px; padding: 12px 14px;
 }
-.mcp-hub-section > summary {
+.mcp-manage-section > summary {
   display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
   cursor: pointer; list-style: none;
 }
-.mcp-hub-section > summary::-webkit-details-marker { display: none; }
-.mcp-hub-section[open] > summary { margin-bottom: 10px; }
-.mcp-hub-section-title { font-size: 14px; font-weight: 600; }
-.mcp-hub-section-count { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); }
-.mcp-hub-section-lead { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); margin-bottom: 10px; }
-.mcp-hub-section-body { display: flex; flex-direction: column; gap: 8px; }
-.mcp-hub-file { border: 1px solid var(--dsw-alias-border-l1, rgba(128,128,128,.22)); border-radius: 9px; padding: 9px 11px; }
-.mcp-hub-file-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.mcp-hub-file-path { font-size: 11px; color: var(--dsw-alias-label-secondary, inherit); word-break: break-all; flex: 1 1 100%; }
-.mcp-hub-file-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 3px 0; }
-.mcp-hub-file-row code { min-width: 0; }
-.mcp-hub-file-error { font-size: 12px; color: var(--dsw-alias-state-error-primary, #c9342c); }
-.mcp-hub-static-phase { font-size: 11.5px; color: var(--dsw-alias-label-secondary, inherit); }
-.mcp-hub-warnings { font-size: 12px; color: var(--dsw-alias-state-warn-primary, #b7791f); display: flex; flex-direction: column; gap: 3px; }
-.mcp-hub-error {
+.mcp-manage-section > summary::-webkit-details-marker { display: none; }
+.mcp-manage-section[open] > summary { margin-bottom: 10px; }
+.mcp-manage-section-title { font-size: 14px; font-weight: 600; }
+.mcp-manage-section-count { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-section-lead { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); margin-bottom: 10px; }
+.mcp-manage-section-body { display: flex; flex-direction: column; gap: 8px; }
+.mcp-manage-file { border: 1px solid var(--dsw-alias-border-l1, rgba(128,128,128,.22)); border-radius: 9px; padding: 9px 11px; }
+.mcp-manage-file-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mcp-manage-file-path { font-size: 11px; color: var(--dsw-alias-label-secondary, inherit); word-break: break-all; flex: 1 1 100%; }
+.mcp-manage-file-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 3px 0; }
+.mcp-manage-file-row code { min-width: 0; }
+.mcp-manage-file-error { font-size: 12px; color: var(--dsw-alias-state-error-primary, #c9342c); }
+.mcp-manage-static-phase { font-size: 11.5px; color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-warnings { font-size: 12px; color: var(--dsw-alias-state-warn-primary, #b7791f); display: flex; flex-direction: column; gap: 3px; }
+.mcp-manage-error {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   font-size: 12.5px; color: var(--dsw-alias-state-error-primary, #c9342c);
   background: color-mix(in srgb, currentColor 8%, transparent);
   border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
   border-radius: 8px; padding: 7px 10px;
 }
-.mcp-hub-notice { font-size: 12px; color: var(--dsw-alias-state-success-primary, #2f9e44); }
-.mcp-hub-footer-note { font-size: 11.5px; color: var(--dsw-alias-label-secondary, inherit); }
-.mcp-hub-footer-note strong { color: var(--dsw-alias-label-primary, inherit); font-weight: 600; }
+.mcp-manage-notice { font-size: 12px; color: var(--dsw-alias-state-success-primary, #2f9e44); }
+.mcp-manage-footer-note { font-size: 11.5px; color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-footer-note strong { color: var(--dsw-alias-label-primary, inherit); font-weight: 600; }
 
-.mcp-hub-empty {
+.mcp-manage-empty {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   padding: 26px 18px; text-align: center;
   border: 1px dashed var(--dsw-alias-border-l2, rgba(128,128,128,.4));
   border-radius: 12px;
   color: var(--dsw-alias-label-secondary, inherit);
 }
-.mcp-hub-empty strong { color: var(--dsw-alias-label-primary, inherit); font-weight: 600; }
+.mcp-manage-empty strong { color: var(--dsw-alias-label-primary, inherit); font-weight: 600; }
 
 /* Dialogs: a native modal dialog owns the top layer, so the settings panel's
    scroll container, transforms and stacking order cannot clip it. */
-.mcp-hub-dialog {
+.mcp-manage-dialog {
   width: min(680px, calc(100vw - 40px));
   max-height: min(86vh, 820px);
   padding: 0;
@@ -904,35 +904,35 @@ window.__ModuleLoader__.load({
   box-shadow: 0 24px 64px rgba(0,0,0,.38);
   overflow: hidden;
 }
-.mcp-hub-dialog[open] { display: flex; flex-direction: column; }
-.mcp-hub-dialog[data-size="sm"] { width: min(440px, calc(100vw - 40px)); }
-.mcp-hub-dialog::backdrop { background: rgba(0,0,0,.44); }
-.mcp-hub-dialog-head, .mcp-hub-dialog-foot { flex: 0 0 auto; }
-.mcp-hub-dialog-body { flex: 1 1 auto; }
-.mcp-hub-dialog-head {
+.mcp-manage-dialog[open] { display: flex; flex-direction: column; }
+.mcp-manage-dialog[data-size="sm"] { width: min(440px, calc(100vw - 40px)); }
+.mcp-manage-dialog::backdrop { background: rgba(0,0,0,.44); }
+.mcp-manage-dialog-head, .mcp-manage-dialog-foot { flex: 0 0 auto; }
+.mcp-manage-dialog-body { flex: 1 1 auto; }
+.mcp-manage-dialog-head {
   display: flex; align-items: flex-start; gap: 10px;
   padding: 16px 18px 10px;
 }
-.mcp-hub-dialog-heading { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.mcp-hub-dialog-title { font-size: 15px; font-weight: 600; }
-.mcp-hub-dialog-sub { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); }
-.mcp-hub-dialog-body { padding: 4px 18px 14px; overflow: auto; min-height: 0; display: flex; flex-direction: column; gap: 13px; }
-.mcp-hub-dialog-foot {
+.mcp-manage-dialog-heading { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.mcp-manage-dialog-title { font-size: 15px; font-weight: 600; }
+.mcp-manage-dialog-sub { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-dialog-body { padding: 4px 18px 14px; overflow: auto; min-height: 0; display: flex; flex-direction: column; gap: 13px; }
+.mcp-manage-dialog-foot {
   display: flex; align-items: center; gap: 8px; justify-content: flex-end;
   padding: 11px 18px; border-top: 1px solid var(--dsw-alias-border-l1, rgba(128,128,128,.25));
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #000) 3%, transparent);
 }
-.mcp-hub-tabs { display: inline-flex; gap: 3px; padding: 3px; border-radius: 9px; background: color-mix(in srgb, currentColor 7%, transparent); align-self: flex-start; }
-.mcp-hub-tab {
+.mcp-manage-tabs { display: inline-flex; gap: 3px; padding: 3px; border-radius: 9px; background: color-mix(in srgb, currentColor 7%, transparent); align-self: flex-start; }
+.mcp-manage-tab {
   border: 0; border-radius: 7px; background: transparent; color: var(--dsw-alias-label-secondary, inherit);
   font: inherit; font-size: 12.5px; padding: 4px 12px; cursor: pointer;
 }
-.mcp-hub-tab[data-active="true"] { background: var(--dsw-alias-bg-layer-1, Canvas); color: var(--dsw-alias-label-primary, inherit); box-shadow: 0 1px 3px rgba(0,0,0,.18); }
-.mcp-hub-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-.mcp-hub-field-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-.mcp-hub-field-label { font-size: 12.5px; font-weight: 600; }
-.mcp-hub-field-hint { font-size: 11.5px; color: var(--dsw-alias-label-secondary, inherit); }
-.mcp-hub-input, .mcp-hub-textarea, .mcp-hub-select {
+.mcp-manage-tab[data-active="true"] { background: var(--dsw-alias-bg-layer-1, Canvas); color: var(--dsw-alias-label-primary, inherit); box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+.mcp-manage-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.mcp-manage-field-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.mcp-manage-field-label { font-size: 12.5px; font-weight: 600; }
+.mcp-manage-field-hint { font-size: 11.5px; color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-input, .mcp-manage-textarea, .mcp-manage-select {
   width: 100%; min-height: 32px; padding: 5px 9px;
   border: 1px solid var(--dsw-alias-border-l2, rgba(128,128,128,.45));
   border-radius: 8px;
@@ -940,34 +940,34 @@ window.__ModuleLoader__.load({
   color: var(--dsw-alias-label-primary, inherit);
   font: inherit; font-size: 13px;
 }
-.mcp-hub-textarea { min-height: 68px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; line-height: 1.5; }
-.mcp-hub-input:disabled, .mcp-hub-textarea:disabled, .mcp-hub-select:disabled { opacity: .6; }
-.mcp-hub-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.mcp-hub-segmented { display: inline-flex; gap: 4px; padding: 3px; border-radius: 9px; background: color-mix(in srgb, currentColor 7%, transparent); align-self: flex-start; }
-.mcp-hub-segment {
+.mcp-manage-textarea { min-height: 68px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; line-height: 1.5; }
+.mcp-manage-input:disabled, .mcp-manage-textarea:disabled, .mcp-manage-select:disabled { opacity: .6; }
+.mcp-manage-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mcp-manage-segmented { display: inline-flex; gap: 4px; padding: 3px; border-radius: 9px; background: color-mix(in srgb, currentColor 7%, transparent); align-self: flex-start; }
+.mcp-manage-segment {
   border: 1px solid transparent; border-radius: 7px; background: transparent;
   color: var(--dsw-alias-label-secondary, inherit); font: inherit; font-size: 12.5px;
   padding: 4px 14px; cursor: pointer;
 }
-.mcp-hub-segment[data-active="true"] {
+.mcp-manage-segment[data-active="true"] {
   background: var(--dsw-alias-bg-layer-1, Canvas);
   border-color: var(--dsw-alias-border-l2, rgba(128,128,128,.4));
   color: var(--dsw-alias-label-primary, inherit); font-weight: 600;
 }
-.mcp-hub-check { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; cursor: pointer; }
-.mcp-hub-check input { width: 15px; height: 15px; accent-color: var(--dsw-alias-state-business-primary, #4176e6); }
-.mcp-hub-advanced > summary { cursor: pointer; font-size: 12.5px; color: var(--dsw-alias-label-secondary, inherit); list-style: none; display: inline-flex; align-items: center; gap: 5px; }
-.mcp-hub-advanced > summary::-webkit-details-marker { display: none; }
-.mcp-hub-advanced[open] > summary { margin-bottom: 10px; }
-.mcp-hub-advanced-body { display: flex; flex-direction: column; gap: 11px; }
-.mcp-hub-form-error { font-size: 12.5px; color: var(--dsw-alias-state-error-primary, #c9342c); }
-.mcp-hub-dialog-note { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); }
-.mcp-hub-confirm-body { font-size: 13px; color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-check { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; cursor: pointer; }
+.mcp-manage-check input { width: 15px; height: 15px; accent-color: var(--dsw-alias-state-business-primary, #4176e6); }
+.mcp-manage-advanced > summary { cursor: pointer; font-size: 12.5px; color: var(--dsw-alias-label-secondary, inherit); list-style: none; display: inline-flex; align-items: center; gap: 5px; }
+.mcp-manage-advanced > summary::-webkit-details-marker { display: none; }
+.mcp-manage-advanced[open] > summary { margin-bottom: 10px; }
+.mcp-manage-advanced-body { display: flex; flex-direction: column; gap: 11px; }
+.mcp-manage-form-error { font-size: 12.5px; color: var(--dsw-alias-state-error-primary, #c9342c); }
+.mcp-manage-dialog-note { font-size: 12px; color: var(--dsw-alias-label-secondary, inherit); }
+.mcp-manage-confirm-body { font-size: 13px; color: var(--dsw-alias-label-secondary, inherit); }
 `
 
     function installStyles() {
       if (typeof document === 'undefined') return
-      const existing = document.getElementById('dsh-mcp-hub-styles')
+      const existing = document.getElementById('dsh-mcp-manage-styles')
       if (existing !== null) {
         // A plugin reload re-applies this module without reloading the page;
         // the old tag must receive the current rules instead of being reused.
@@ -975,7 +975,7 @@ window.__ModuleLoader__.load({
         return
       }
       const tag = document.createElement('style')
-      tag.id = 'dsh-mcp-hub-styles'
+      tag.id = 'dsh-mcp-manage-styles'
       tag.textContent = CSS
       document.head.appendChild(tag)
     }
@@ -1021,7 +1021,7 @@ window.__ModuleLoader__.load({
       }
       return h('button', {
         type: type ?? 'button',
-        className: 'mcp-hub-btn',
+        className: 'mcp-manage-btn',
         'data-variant': variant,
         onClick,
         disabled,
@@ -1033,7 +1033,7 @@ window.__ModuleLoader__.load({
     function IconButton({ icon, label, onClick, disabled, tone, title }) {
       return h('button', {
         type: 'button',
-        className: 'mcp-hub-icon-btn',
+        className: 'mcp-manage-icon-btn',
         'data-tone': tone,
         'aria-label': label,
         title: title ?? label,
@@ -1043,11 +1043,11 @@ window.__ModuleLoader__.load({
     }
 
     function Badge({ children, tone }) {
-      return h('span', { className: 'mcp-hub-badge', 'data-tone': tone }, children)
+      return h('span', { className: 'mcp-manage-badge', 'data-tone': tone }, children)
     }
 
     function Switch({ checked, onChange, disabled, label }) {
-      return h('label', { className: 'mcp-hub-switch', title: label },
+      return h('label', { className: 'mcp-manage-switch', title: label },
         h('input', {
           type: 'checkbox',
           role: 'switch',
@@ -1056,7 +1056,7 @@ window.__ModuleLoader__.load({
           'aria-label': label,
           onChange: (event) => onChange(event.target.checked),
         }),
-        h('span', { className: 'mcp-hub-switch-track', 'aria-hidden': 'true' }))
+        h('span', { className: 'mcp-manage-switch-track', 'aria-hidden': 'true' }))
     }
 
     function Field({ label, hint, children }) {
@@ -1068,10 +1068,10 @@ window.__ModuleLoader__.load({
           'aria-describedby': hint ? hintId : undefined,
         })
         : children
-      return h('div', { className: 'mcp-hub-field' },
-        h('div', { className: 'mcp-hub-field-head' },
-          h('label', { className: 'mcp-hub-field-label', htmlFor: id }, label),
-          hint ? h('span', { className: 'mcp-hub-field-hint', id: hintId }, hint) : null),
+      return h('div', { className: 'mcp-manage-field' },
+        h('div', { className: 'mcp-manage-field-head' },
+          h('label', { className: 'mcp-manage-field-label', htmlFor: id }, label),
+          hint ? h('span', { className: 'mcp-manage-field-hint', id: hintId }, hint) : null),
         control)
     }
 
@@ -1090,8 +1090,8 @@ window.__ModuleLoader__.load({
           closeRef.current()
         }
         element.addEventListener('cancel', onCancel)
-        const target = element.querySelector('.mcp-hub-dialog-body input:not([type="checkbox"]):not([disabled]), .mcp-hub-dialog-body textarea:not([disabled]), .mcp-hub-dialog-body select:not([disabled])')
-          ?? element.querySelector('.mcp-hub-dialog-foot button')
+        const target = element.querySelector('.mcp-manage-dialog-body input:not([type="checkbox"]):not([disabled]), .mcp-manage-dialog-body textarea:not([disabled]), .mcp-manage-dialog-body select:not([disabled])')
+          ?? element.querySelector('.mcp-manage-dialog-foot button')
         if (target !== null && typeof target.focus === 'function') target.focus()
         return () => {
           element.removeEventListener('cancel', onCancel)
@@ -1101,7 +1101,7 @@ window.__ModuleLoader__.load({
       // A native modal dialog lives in the top layer: no ancestor transform,
       // overflow or z-index can clip it, and Escape/focus are the browser's.
       return h('dialog', {
-        className: 'mcp-hub-dialog',
+        className: 'mcp-manage-dialog',
         'data-size': size,
         'aria-label': title,
         ref,
@@ -1109,16 +1109,16 @@ window.__ModuleLoader__.load({
           if (event.target === ref.current) onClose()
         },
       }, [
-        h('div', { key: 'head', className: 'mcp-hub-dialog-head' }, [
-          h('div', { key: 'text', className: 'mcp-hub-dialog-heading' }, [
-            h('span', { key: 'title', className: 'mcp-hub-dialog-title' }, title),
-            subtitle ? h('span', { key: 'sub', className: 'mcp-hub-dialog-sub' }, subtitle) : null,
+        h('div', { key: 'head', className: 'mcp-manage-dialog-head' }, [
+          h('div', { key: 'text', className: 'mcp-manage-dialog-heading' }, [
+            h('span', { key: 'title', className: 'mcp-manage-dialog-title' }, title),
+            subtitle ? h('span', { key: 'sub', className: 'mcp-manage-dialog-sub' }, subtitle) : null,
           ]),
           h('div', { key: 'spacer', style: { flex: '1 1 auto' } }),
           h(IconButton, { key: 'close', icon: 'x', label: t('action.close'), onClick: onClose }),
         ]),
-        h('div', { key: 'body', className: 'mcp-hub-dialog-body' }, children),
-        footer ? h('div', { key: 'foot', className: 'mcp-hub-dialog-foot' }, footer) : null,
+        h('div', { key: 'body', className: 'mcp-manage-dialog-body' }, children),
+        footer ? h('div', { key: 'foot', className: 'mcp-manage-dialog-foot' }, footer) : null,
       ])
     }
 
@@ -1257,11 +1257,11 @@ window.__ModuleLoader__.load({
         }
       }
 
-      const transportToggle = h('div', { className: 'mcp-hub-segmented', role: 'group', 'aria-label': t2('form.transport') }, [
+      const transportToggle = h('div', { className: 'mcp-manage-segmented', role: 'group', 'aria-label': t2('form.transport') }, [
         h('button', {
           key: 'stdio',
           type: 'button',
-          className: 'mcp-hub-segment',
+          className: 'mcp-manage-segment',
           'data-active': String(form.transport === 'stdio'),
           'aria-pressed': form.transport === 'stdio',
           onClick: () => setForm((current) => ({ ...current, transport: 'stdio' })),
@@ -1269,7 +1269,7 @@ window.__ModuleLoader__.load({
         h('button', {
           key: 'http',
           type: 'button',
-          className: 'mcp-hub-segment',
+          className: 'mcp-manage-segment',
           'data-active': String(form.transport === 'streamable-http'),
           'aria-pressed': form.transport === 'streamable-http',
           onClick: () => setForm((current) => ({ ...current, transport: 'streamable-http' })),
@@ -1284,7 +1284,7 @@ window.__ModuleLoader__.load({
             label: t2('form.name'),
             hint: t2('form.nameHint'),
           }, h('input', {
-            className: 'mcp-hub-input',
+            className: 'mcp-manage-input',
             value: form.name,
             disabled: isEdit,
             spellCheck: false,
@@ -1298,7 +1298,7 @@ window.__ModuleLoader__.load({
             label: t2('form.command'),
             hint: t2('form.commandHint'),
           }, h('input', {
-            className: 'mcp-hub-input',
+            className: 'mcp-manage-input',
             value: form.command,
             spellCheck: false,
             placeholder: 'npx',
@@ -1309,7 +1309,7 @@ window.__ModuleLoader__.load({
             label: t2('form.url'),
             hint: t2('form.urlHint'),
           }, h('input', {
-            className: 'mcp-hub-input',
+            className: 'mcp-manage-input',
             value: form.url,
             spellCheck: false,
             placeholder: 'https://example.com/mcp',
@@ -1321,7 +1321,7 @@ window.__ModuleLoader__.load({
             label: t2('form.args'),
             hint: t2('form.argsHint'),
           }, h('textarea', {
-            className: 'mcp-hub-textarea',
+            className: 'mcp-manage-textarea',
             value: form.args,
             spellCheck: false,
             placeholder: '-y\n@modelcontextprotocol/server-github',
@@ -1332,7 +1332,7 @@ window.__ModuleLoader__.load({
             label: t2('form.headers'),
             hint: t2('form.headersHint'),
           }, h('textarea', {
-            className: 'mcp-hub-textarea',
+            className: 'mcp-manage-textarea',
             value: form.headers,
             spellCheck: false,
             placeholder: 'Authorization: Bearer ${credential:MCP_TOKEN}',
@@ -1344,39 +1344,39 @@ window.__ModuleLoader__.load({
             label: t2('form.env'),
             hint: t2('form.envHint'),
           }, h('textarea', {
-            className: 'mcp-hub-textarea',
+            className: 'mcp-manage-textarea',
             value: form.env,
             spellCheck: false,
             placeholder: 'GITHUB_TOKEN=${credential:GITHUB_TOKEN}',
             onChange: update('env'),
           }))
           : null,
-        h('details', { key: 'advanced', className: 'mcp-hub-advanced' }, [
+        h('details', { key: 'advanced', className: 'mcp-manage-advanced' }, [
           h('summary', { key: 'summary' }, h(Icon, { name: 'chevron', size: 12 }), t2('form.advanced')),
-          h('div', { key: 'body', className: 'mcp-hub-advanced-body' }, [
+          h('div', { key: 'body', className: 'mcp-manage-advanced-body' }, [
             form.transport === 'stdio'
               ? h(Field, {
                 key: 'cwd',
                 label: t2('form.cwd'),
                 hint: t2('form.cwdHint'),
               }, h('input', {
-                className: 'mcp-hub-input',
+                className: 'mcp-manage-input',
                 value: form.cwd,
                 spellCheck: false,
                 placeholder: 'C:\\projects\\server',
                 onChange: update('cwd'),
               }))
               : null,
-            h('div', { key: 'numbers', className: 'mcp-hub-row2' }, [
+            h('div', { key: 'numbers', className: 'mcp-manage-row2' }, [
               h(Field, { key: 'startup', label: t2('form.startup'), hint: t2('form.advancedHint') }, h('input', {
-                className: 'mcp-hub-input',
+                className: 'mcp-manage-input',
                 value: form.startupTimeoutMs,
                 inputMode: 'numeric',
                 placeholder: '30000',
                 onChange: update('startupTimeoutMs'),
               })),
               h(Field, { key: 'call', label: t2('form.call'), hint: t2('form.advancedHint') }, h('input', {
-                className: 'mcp-hub-input',
+                className: 'mcp-manage-input',
                 value: form.toolCallTimeoutMs,
                 inputMode: 'numeric',
                 placeholder: '60000',
@@ -1384,19 +1384,19 @@ window.__ModuleLoader__.load({
               })),
             ]),
             h(Field, { key: 'close', label: t2('form.close'), hint: t2('form.advancedHint') }, h('input', {
-              className: 'mcp-hub-input',
+              className: 'mcp-manage-input',
               value: form.closeTimeoutMs,
               inputMode: 'numeric',
               placeholder: '5000',
               onChange: update('closeTimeoutMs'),
             })),
             staticMode
-              ? h('label', { key: 'fail', className: 'mcp-hub-check' }, h('input', {
+              ? h('label', { key: 'fail', className: 'mcp-manage-check' }, h('input', {
                 type: 'checkbox',
                 checked: form.failOnStartupError === true,
                 onChange: (event) => setForm((current) => ({ ...current, failOnStartupError: event.target.checked })),
               }), t2('form.failOnStartup'))
-              : h('label', { key: 'reconnect', className: 'mcp-hub-check' }, h('input', {
+              : h('label', { key: 'reconnect', className: 'mcp-manage-check' }, h('input', {
                 type: 'checkbox',
                 checked: form.reconnect !== false,
                 onChange: (event) => setForm((current) => ({ ...current, reconnect: event.target.checked })),
@@ -1406,13 +1406,13 @@ window.__ModuleLoader__.load({
       ])
 
       const jsonView = h('div', { key: 'json', style: { display: 'flex', flexDirection: 'column', gap: '8px' }, role: 'tabpanel' }, [
-        h('p', { key: 'hint', className: 'mcp-hub-dialog-note' }, isEdit
+        h('p', { key: 'hint', className: 'mcp-manage-dialog-note' }, isEdit
           ? t2('form.jsonEditHint', { name: form.name || '' })
           : t2('form.jsonHint')),
-        h('p', { key: 'replace', className: 'mcp-hub-dialog-note' }, isEdit ? t2('form.jsonReplace') : t2('form.jsonSingleName')),
+        h('p', { key: 'replace', className: 'mcp-manage-dialog-note' }, isEdit ? t2('form.jsonReplace') : t2('form.jsonSingleName')),
         h('textarea', {
           key: 'area',
-          className: 'mcp-hub-textarea',
+          className: 'mcp-manage-textarea',
           style: { minHeight: '240px' },
           value: json,
           spellCheck: false,
@@ -1430,7 +1430,7 @@ window.__ModuleLoader__.load({
           h('button', {
             key: 'cancel',
             type: 'button',
-            className: 'mcp-hub-btn',
+            className: 'mcp-manage-btn',
             onClick: onClose,
             disabled: submitting,
           }, t2('action.cancel')),
@@ -1442,11 +1442,11 @@ window.__ModuleLoader__.load({
           }, submitting ? t2('action.saving') : t2('action.save')),
         ],
       }, [
-        h('div', { key: 'tabs', className: 'mcp-hub-tabs', role: 'tablist', 'aria-label': t2('title') }, [
+        h('div', { key: 'tabs', className: 'mcp-manage-tabs', role: 'tablist', 'aria-label': t2('title') }, [
           h('button', {
             key: 'form',
             type: 'button',
-            className: 'mcp-hub-tab',
+            className: 'mcp-manage-tab',
             role: 'tab',
             'aria-selected': tab === 'form',
             'data-active': String(tab === 'form'),
@@ -1455,7 +1455,7 @@ window.__ModuleLoader__.load({
           h('button', {
             key: 'json',
             type: 'button',
-            className: 'mcp-hub-tab',
+            className: 'mcp-manage-tab',
             role: 'tab',
             'aria-selected': tab === 'json',
             'data-active': String(tab === 'json'),
@@ -1463,7 +1463,7 @@ window.__ModuleLoader__.load({
           }, t2('form.tabJson')),
         ]),
         tab === 'form' ? formView : jsonView,
-        error !== '' ? h('div', { key: 'error', className: 'mcp-hub-form-error', role: 'alert' }, error) : null,
+        error !== '' ? h('div', { key: 'error', className: 'mcp-manage-form-error', role: 'alert' }, error) : null,
       ])
     }
 
@@ -1474,17 +1474,17 @@ window.__ModuleLoader__.load({
     function ToolList({ tools }) {
       const [expanded, setExpanded] = useState(false)
       if (!Array.isArray(tools) || tools.length === 0) {
-        return h('p', { className: 'mcp-hub-empty-tools' }, t('tools.none'))
+        return h('p', { className: 'mcp-manage-empty-tools' }, t('tools.none'))
       }
       const limit = expanded ? tools.length : Math.min(tools.length, 12)
       return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } }, [
-        h('div', { key: 'list', className: 'mcp-hub-tools' }, tools.slice(0, limit).map((tool) =>
-          h('span', { key: tool, className: 'mcp-hub-tool', title: tool }, tool))),
+        h('div', { key: 'list', className: 'mcp-manage-tools' }, tools.slice(0, limit).map((tool) =>
+          h('span', { key: tool, className: 'mcp-manage-tool', title: tool }, tool))),
         tools.length > limit
           ? h('button', {
             key: 'more',
             type: 'button',
-            className: 'mcp-hub-btn',
+            className: 'mcp-manage-btn',
             style: { alignSelf: 'flex-start', minHeight: '24px', padding: '1px 8px', fontSize: '11.5px' },
             onClick: () => setExpanded(true),
           }, t('tools.more', { count: tools.length - limit }))
@@ -1494,8 +1494,8 @@ window.__ModuleLoader__.load({
 
     function DetailsGrid({ rows }) {
       const visible = rows.filter((row) => row !== null && row !== undefined)
-      if (visible.length === 0) return h('p', { className: 'mcp-hub-empty-tools' }, t('config.none'))
-      return h('dl', { className: 'mcp-hub-more-grid' }, visible.map((row, index) =>
+      if (visible.length === 0) return h('p', { className: 'mcp-manage-empty-tools' }, t('config.none'))
+      return h('dl', { className: 'mcp-manage-more-grid' }, visible.map((row, index) =>
         h(React.Fragment, { key: index }, h('dt', null, row[0]), h('dd', null, row[1]))))
     }
 
@@ -1504,18 +1504,18 @@ window.__ModuleLoader__.load({
       rows.push([t('config.transport'), server.transport === 'streamable-http' ? 'streamable-http' : 'stdio'])
       if (server.transport === 'stdio') {
         rows.push([t('config.command'), h('code', null, server.command || '—')])
-        if (Array.isArray(server.args) && server.args.length > 0) rows.push([t('form.args'), h('span', { className: 'mcp-hub-mono-block' }, server.args.join('\n'))])
+        if (Array.isArray(server.args) && server.args.length > 0) rows.push([t('form.args'), h('span', { className: 'mcp-manage-mono-block' }, server.args.join('\n'))])
         if (server.cwd) rows.push([t('config.cwd'), h('code', null, server.cwd)])
         const envKeys = Object.keys(server.env ?? {})
         if (envKeys.length > 0) {
-          rows.push([t('env.title'), h('span', { className: 'mcp-hub-mono-block' },
+          rows.push([t('env.title'), h('span', { className: 'mcp-manage-mono-block' },
             envKeys.map((key) => `${key}=${server.env[key]}`).join('\n'))])
         }
       } else {
         rows.push([t('config.url'), h('code', null, server.url || '—')])
         const headerKeys = Object.keys(server.headers ?? {})
         if (headerKeys.length > 0) {
-          rows.push([t('headers.title'), h('span', { className: 'mcp-hub-mono-block' },
+          rows.push([t('headers.title'), h('span', { className: 'mcp-manage-mono-block' },
             headerKeys.map((key) => `${key}: ${server.headers[key]}`).join('\n'))])
         }
       }
@@ -1573,43 +1573,43 @@ window.__ModuleLoader__.load({
         onClick: () => onDelete(),
       }))
 
-      return h('article', { className: 'mcp-hub-card', 'aria-busy': activeKind !== undefined }, [
-        h('div', { key: 'head', className: 'mcp-hub-card-head' }, [
-          h('span', { key: 'dot', className: 'mcp-hub-dot', 'data-tone': view.tone, 'aria-hidden': 'true' }),
-          h('span', { key: 'name', className: 'mcp-hub-name' }, server.name),
+      return h('article', { className: 'mcp-manage-card', 'aria-busy': activeKind !== undefined }, [
+        h('div', { key: 'head', className: 'mcp-manage-card-head' }, [
+          h('span', { key: 'dot', className: 'mcp-manage-dot', 'data-tone': view.tone, 'aria-hidden': 'true' }),
+          h('span', { key: 'name', className: 'mcp-manage-name' }, server.name),
           h(Badge, { key: 'transport' }, transportLabel(server)),
           isBase ? h(Badge, { key: 'origin', tone: 'brand' }, t('origin.base')) : null,
           server.origin === 'override' ? h(Badge, { key: 'override' }, t('origin.override')) : null,
-          h('span', { key: 'status', className: 'mcp-hub-status', 'data-tone': view.tone, role: 'status' }, [
+          h('span', { key: 'status', className: 'mcp-manage-status', 'data-tone': view.tone, role: 'status' }, [
             h('span', { key: 'label' }, view.label),
-            view.detail ? h('span', { key: 'detail', className: 'mcp-hub-status-detail' }, ' · ' + view.detail) : null,
+            view.detail ? h('span', { key: 'detail', className: 'mcp-manage-status-detail' }, ' · ' + view.detail) : null,
           ]),
-          h('div', { key: 'actions', className: 'mcp-hub-actions' }, actions),
+          h('div', { key: 'actions', className: 'mcp-manage-actions' }, actions),
         ]),
-        h('div', { key: 'sub', className: 'mcp-hub-sub' },
-          h('code', { className: 'mcp-hub-cmd', title: commandLine(server) }, commandLine(server) || '—')),
+        h('div', { key: 'sub', className: 'mcp-manage-sub' },
+          h('code', { className: 'mcp-manage-cmd', title: commandLine(server) }, commandLine(server) || '—')),
         isBase
-          ? h('p', { key: 'base-hint', className: 'mcp-hub-footer-note' }, t('action.deleteDisabled'))
+          ? h('p', { key: 'base-hint', className: 'mcp-manage-footer-note' }, t('action.deleteDisabled'))
           : null,
         error !== undefined && error !== ''
-          ? h('p', { key: 'error', className: 'mcp-hub-card-error', role: 'alert' }, error)
+          ? h('p', { key: 'error', className: 'mcp-manage-card-error', role: 'alert' }, error)
           : null,
         probe !== undefined && probe !== null
           ? h('div', {
             key: 'probe',
-            className: 'mcp-hub-probe',
+            className: 'mcp-manage-probe',
             'data-tone': probe.state === 'running' ? 'running' : (probeInfo?.tone ?? 'error'),
             role: 'status',
           }, [
             h('span', { key: 'label' }, probe.state === 'running' ? t('probe.running') : (probe.state === 'error' ? probe.error : probeInfo?.label)),
-            ...(probeInfo?.notes ?? []).map((note, index) => h('span', { key: `note${index}`, className: 'mcp-hub-probe-warn' }, note)),
+            ...(probeInfo?.notes ?? []).map((note, index) => h('span', { key: `note${index}`, className: 'mcp-manage-probe-warn' }, note)),
           ])
           : null,
-        h('details', { key: 'more', className: 'mcp-hub-more' }, [
+        h('details', { key: 'more', className: 'mcp-manage-more' }, [
           h('summary', { key: 'summary' }, h(Icon, { name: 'chevron', size: 12 }), t('action.config')),
           h('div', { key: 'body', style: { display: 'flex', flexDirection: 'column', gap: '8px' } }, [
             h('div', { key: 'tools' }, [
-              h('div', { key: 'title', className: 'mcp-hub-field-label', style: { marginBottom: '5px' } }, t('tools.title')),
+              h('div', { key: 'title', className: 'mcp-manage-field-label', style: { marginBottom: '5px' } }, t('tools.title')),
               h(ToolList, { key: 'list', tools: server.tools }),
             ]),
             h(DetailsGrid, { key: 'grid', rows: configRows(server) }),
@@ -1638,34 +1638,34 @@ window.__ModuleLoader__.load({
           onClick: () => onEdit(),
         }),
       ]
-      return h('article', { className: 'mcp-hub-card', 'aria-busy': activeKind !== undefined }, [
-        h('div', { key: 'head', className: 'mcp-hub-card-head' }, [
-          h('span', { key: 'dot', className: 'mcp-hub-dot', 'data-tone': view.tone, 'aria-hidden': 'true' }),
-          h('span', { key: 'name', className: 'mcp-hub-name' }, server.name || server.entryId),
+      return h('article', { className: 'mcp-manage-card', 'aria-busy': activeKind !== undefined }, [
+        h('div', { key: 'head', className: 'mcp-manage-card-head' }, [
+          h('span', { key: 'dot', className: 'mcp-manage-dot', 'data-tone': view.tone, 'aria-hidden': 'true' }),
+          h('span', { key: 'name', className: 'mcp-manage-name' }, server.name || server.entryId),
           h(Badge, { key: 'transport' }, transportLabel(server)),
           h(Badge, { key: 'static', tone: 'brand' }, 'cordis'),
-          h('span', { key: 'status', className: 'mcp-hub-status', 'data-tone': view.tone, role: 'status' }, [
+          h('span', { key: 'status', className: 'mcp-manage-status', 'data-tone': view.tone, role: 'status' }, [
             h('span', { key: 'label' }, view.label),
-            phaseText ? h('span', { key: 'phase', className: 'mcp-hub-status-detail' }, ' · ' + t('static.phase', { phase: phaseText })) : null,
+            phaseText ? h('span', { key: 'phase', className: 'mcp-manage-status-detail' }, ' · ' + t('static.phase', { phase: phaseText })) : null,
           ]),
-          h('div', { key: 'actions', className: 'mcp-hub-actions' }, actions),
+          h('div', { key: 'actions', className: 'mcp-manage-actions' }, actions),
         ]),
-        h('div', { key: 'sub', className: 'mcp-hub-sub' },
-          h('code', { className: 'mcp-hub-cmd', title: commandLine(server) }, commandLine(server) || '—')),
+        h('div', { key: 'sub', className: 'mcp-manage-sub' },
+          h('code', { className: 'mcp-manage-cmd', title: commandLine(server) }, commandLine(server) || '—')),
         server.enabled === false
-          ? h('p', { key: 'hint', className: 'mcp-hub-footer-note' }, t('static.disabledHint'))
+          ? h('p', { key: 'hint', className: 'mcp-manage-footer-note' }, t('static.disabledHint'))
           : null,
         server.conflict === true
-          ? h('p', { key: 'conflict', className: 'mcp-hub-note' }, t('static.conflict'))
+          ? h('p', { key: 'conflict', className: 'mcp-manage-note' }, t('static.conflict'))
           : null,
         error !== undefined && error !== ''
-          ? h('p', { key: 'error', className: 'mcp-hub-card-error', role: 'alert' }, error)
+          ? h('p', { key: 'error', className: 'mcp-manage-card-error', role: 'alert' }, error)
           : null,
-        h('details', { key: 'more', className: 'mcp-hub-more' }, [
+        h('details', { key: 'more', className: 'mcp-manage-more' }, [
           h('summary', { key: 'summary' }, h(Icon, { name: 'chevron', size: 12 }), t('action.config')),
           h('div', { key: 'body', style: { display: 'flex', flexDirection: 'column', gap: '8px' } }, [
             h('div', { key: 'tools' }, [
-              h('div', { key: 'title', className: 'mcp-hub-field-label', style: { marginBottom: '5px' } }, t('tools.title')),
+              h('div', { key: 'title', className: 'mcp-manage-field-label', style: { marginBottom: '5px' } }, t('tools.title')),
               h(ToolList, { key: 'list', tools: server.tools }),
             ]),
             h(DetailsGrid, { key: 'grid', rows: configRows(server) }),
@@ -1680,45 +1680,45 @@ window.__ModuleLoader__.load({
 
     function DiscoverSection({ items, managedNames, busy, canManage, onImport, onScan }) {
       const total = items.reduce((count, item) => count + item.servers.length, 0)
-      return h('details', { className: 'mcp-hub-section', open: false }, [
+      return h('details', { className: 'mcp-manage-section', open: false }, [
         h('summary', { key: 'summary' }, [
-          h('span', { key: 'title', className: 'mcp-hub-section-title' }, t('discover.title')),
-          h('span', { key: 'count', className: 'mcp-hub-section-count' }, total > 0 ? t('discover.found', { count: total }) : ''),
+          h('span', { key: 'title', className: 'mcp-manage-section-title' }, t('discover.title')),
+          h('span', { key: 'count', className: 'mcp-manage-section-count' }, total > 0 ? t('discover.found', { count: total }) : ''),
           h('span', { key: 'spacer', style: { flex: '1 1 auto' } }),
           h('button', {
             key: 'scan',
             type: 'button',
-            className: 'mcp-hub-btn',
+            className: 'mcp-manage-btn',
             style: { minHeight: '26px', padding: '1px 9px', fontSize: '12px' },
             disabled: busy,
             onClick: (event) => { event.preventDefault(); onScan() },
           }, t('scan')),
         ]),
-        h('p', { key: 'lead', className: 'mcp-hub-section-lead' }, t('discover.lead')),
+        h('p', { key: 'lead', className: 'mcp-manage-section-lead' }, t('discover.lead')),
         items.length === 0
-          ? h('p', { key: 'empty', className: 'mcp-hub-empty-tools' }, t('discover.empty'))
-          : h('div', { key: 'files', className: 'mcp-hub-section-body' }, items.map((item) =>
-            h('div', { key: item.id, className: 'mcp-hub-file' }, [
-              h('div', { key: 'head', className: 'mcp-hub-file-head' }, [
+          ? h('p', { key: 'empty', className: 'mcp-manage-empty-tools' }, t('discover.empty'))
+          : h('div', { key: 'files', className: 'mcp-manage-section-body' }, items.map((item) =>
+            h('div', { key: item.id, className: 'mcp-manage-file' }, [
+              h('div', { key: 'head', className: 'mcp-manage-file-head' }, [
                 h('strong', { key: 'label', style: { fontSize: '13px' } }, item.label),
-                h('span', { key: 'count', className: 'mcp-hub-section-count' }, t('discover.found', { count: item.servers.length })),
+                h('span', { key: 'count', className: 'mcp-manage-section-count' }, t('discover.found', { count: item.servers.length })),
               ]),
-              h('div', { key: 'path', className: 'mcp-hub-file-path' }, item.path),
+              h('div', { key: 'path', className: 'mcp-manage-file-path' }, item.path),
               item.error
-                ? h('p', { key: 'error', className: 'mcp-hub-file-error' }, t('discover.fileError', { message: item.error }))
+                ? h('p', { key: 'error', className: 'mcp-manage-file-error' }, t('discover.fileError', { message: item.error }))
                 : null,
               ...item.servers.map((server) =>
-                h('div', { key: server.name, className: 'mcp-hub-file-row' }, [
+                h('div', { key: server.name, className: 'mcp-manage-file-row' }, [
                   h('code', { key: 'name' }, server.name),
                   server.transport ? h(Badge, { key: 'transport' }, server.transport === 'streamable-http' ? t('transport.http') : t('transport.stdio')) : null,
                   server.error
-                    ? h('span', { key: 'error', className: 'mcp-hub-file-error' }, t('discover.rowError', { message: server.error }))
+                    ? h('span', { key: 'error', className: 'mcp-manage-file-error' }, t('discover.rowError', { message: server.error }))
                     : managedNames.includes(server.name)
-                      ? h('span', { key: 'already', className: 'mcp-hub-section-count' }, t('discover.already'))
+                      ? h('span', { key: 'already', className: 'mcp-manage-section-count' }, t('discover.already'))
                       : h('button', {
                         key: 'import',
                         type: 'button',
-                        className: 'mcp-hub-btn',
+                        className: 'mcp-manage-btn',
                         style: { minHeight: '24px', padding: '1px 9px', fontSize: '11.5px' },
                         disabled: busy || canManage !== true,
                         onClick: () => onImport(server),
@@ -1758,11 +1758,11 @@ window.__ModuleLoader__.load({
     /** The MCP manager as a global main panel, opened from the sidebar entry. */
     function HubPage() {
       useLocaleVersion()
-      return h('div', { className: 'mcp-hub-page' },
-        h('div', { className: 'mcp-hub-page-inner' }, [
-          h('header', { key: 'head', className: 'mcp-hub-page-head' }, [
-            h('span', { key: 'glyph', className: 'mcp-hub-page-glyph' }, h(HubGlyph, { size: 22 })),
-            h('h1', { key: 'title', className: 'mcp-hub-page-title' }, t('title')),
+      return h('div', { className: 'mcp-manage-page' },
+        h('div', { className: 'mcp-manage-page-inner' }, [
+          h('header', { key: 'head', className: 'mcp-manage-page-head' }, [
+            h('span', { key: 'glyph', className: 'mcp-manage-page-glyph' }, h(HubGlyph, { size: 22 })),
+            h('h1', { key: 'title', className: 'mcp-manage-page-title' }, t('title')),
           ]),
           h(SettingsRoot, { key: 'root' }),
         ]))
@@ -1992,19 +1992,19 @@ window.__ModuleLoader__.load({
       const body = []
 
       if (state === null) {
-        body.push(h('p', { key: 'loading', className: 'mcp-hub-lead', role: 'status' }, t('loading')))
+        body.push(h('p', { key: 'loading', className: 'mcp-manage-lead', role: 'status' }, t('loading')))
         if (error !== '') {
-          body.push(h('div', { key: 'error', className: 'mcp-hub-error' }, [
+          body.push(h('div', { key: 'error', className: 'mcp-manage-error' }, [
             h('span', { key: 'text' }, t('failed') + '：' + error),
             h('button', {
               key: 'retry',
               type: 'button',
-              className: 'mcp-hub-btn',
+              className: 'mcp-manage-btn',
               onClick: () => load(),
             }, t('retry')),
           ]))
         }
-        return h('div', { className: 'mcp-hub' }, body)
+        return h('div', { className: 'mcp-manage' }, body)
       }
 
       const servers = state.servers ?? []
@@ -2020,25 +2020,25 @@ window.__ModuleLoader__.load({
       const capabilities = state.capabilities ?? {}
 
       const chips = [
-        h('span', { key: 'all', className: 'mcp-hub-chip' }, t('summary.all', { count: servers.length })),
+        h('span', { key: 'all', className: 'mcp-manage-chip' }, t('summary.all', { count: servers.length })),
       ]
-      if (connected > 0) chips.push(h('span', { key: 'connected', className: 'mcp-hub-chip', 'data-tone': 'ok' }, t('summary.connected', { count: connected })))
-      if (disabled > 0) chips.push(h('span', { key: 'disabled', className: 'mcp-hub-chip' }, t('summary.disabled', { count: disabled })))
-      if (staticServers.length > 0) chips.push(h('span', { key: 'static', className: 'mcp-hub-chip' }, t('summary.static', { count: staticServers.length })))
-      if (importable > 0) chips.push(h('span', { key: 'found', className: 'mcp-hub-chip', 'data-tone': 'warn' }, t('summary.found', { count: importable })))
+      if (connected > 0) chips.push(h('span', { key: 'connected', className: 'mcp-manage-chip', 'data-tone': 'ok' }, t('summary.connected', { count: connected })))
+      if (disabled > 0) chips.push(h('span', { key: 'disabled', className: 'mcp-manage-chip' }, t('summary.disabled', { count: disabled })))
+      if (staticServers.length > 0) chips.push(h('span', { key: 'static', className: 'mcp-manage-chip' }, t('summary.static', { count: staticServers.length })))
+      if (importable > 0) chips.push(h('span', { key: 'found', className: 'mcp-manage-chip', 'data-tone': 'warn' }, t('summary.found', { count: importable })))
 
-      body.push(h('p', { key: 'lead', className: 'mcp-hub-lead' }, [
+      body.push(h('p', { key: 'lead', className: 'mcp-manage-lead' }, [
         h('span', { key: 'text' }, t('lead')),
         h('span', { key: 'version', style: { opacity: 0.55, marginLeft: '8px', fontSize: '11.5px' } }, '· ' + t('version.label')),
       ]))
 
-      body.push(h('div', { key: 'toolbar', className: 'mcp-hub-toolbar' }, [
-        h('div', { key: 'chips', className: 'mcp-hub-chips' }, chips),
-        h('span', { key: 'spacer', className: 'mcp-hub-spacer' }),
+      body.push(h('div', { key: 'toolbar', className: 'mcp-manage-toolbar' }, [
+        h('div', { key: 'chips', className: 'mcp-manage-chips' }, chips),
+        h('span', { key: 'spacer', className: 'mcp-manage-spacer' }),
         h('button', {
           key: 'refresh',
           type: 'button',
-          className: 'mcp-hub-btn',
+          className: 'mcp-manage-btn',
           disabled: busy,
           onClick: () => { load(); flash(t('notice.refreshed')) },
         }, h(Icon, { name: 'refresh', size: 13 }), h('span', null, t('refresh'))),
@@ -2052,10 +2052,10 @@ window.__ModuleLoader__.load({
         }, t('add')),
       ]))
 
-      body.push(h('div', { key: 'shortcut', className: 'mcp-hub-pref' }, [
-        h('div', { key: 'text', className: 'mcp-hub-pref-text' }, [
-          h('span', { key: 'title', className: 'mcp-hub-field-label' }, t('shortcut.title')),
-          h('span', { key: 'hint', className: 'mcp-hub-field-hint' }, t('shortcut.hint')),
+      body.push(h('div', { key: 'shortcut', className: 'mcp-manage-pref' }, [
+        h('div', { key: 'text', className: 'mcp-manage-pref-text' }, [
+          h('span', { key: 'title', className: 'mcp-manage-field-label' }, t('shortcut.title')),
+          h('span', { key: 'hint', className: 'mcp-manage-field-hint' }, t('shortcut.hint')),
         ]),
         h(Switch, {
           key: 'switch',
@@ -2067,19 +2067,19 @@ window.__ModuleLoader__.load({
       ]))
 
       if (error !== '') {
-        body.push(h('div', { key: 'error', className: 'mcp-hub-error', role: 'alert' }, [
+        body.push(h('div', { key: 'error', className: 'mcp-manage-error', role: 'alert' }, [
           h('span', { key: 'text' }, t('failed') + '：' + error),
-          h('button', { key: 'retry', type: 'button', className: 'mcp-hub-btn', onClick: () => load() }, t('refresh')),
+          h('button', { key: 'retry', type: 'button', className: 'mcp-manage-btn', onClick: () => load() }, t('refresh')),
         ]))
       }
-      if (notice !== '') body.push(h('div', { key: 'notice', className: 'mcp-hub-notice', role: 'status' }, notice))
+      if (notice !== '') body.push(h('div', { key: 'notice', className: 'mcp-manage-notice', role: 'status' }, notice))
 
       if (capabilities.managed !== true) {
-        body.push(h('div', { key: 'manager', className: 'mcp-hub-note' }, t(managerReasonKey(managed.reason))))
+        body.push(h('div', { key: 'manager', className: 'mcp-manage-note' }, t(managerReasonKey(managed.reason))))
       }
 
       if (servers.length === 0) {
-        body.push(h('div', { key: 'empty', className: 'mcp-hub-empty' }, [
+        body.push(h('div', { key: 'empty', className: 'mcp-manage-empty' }, [
           h('strong', { key: 'title' }, t('empty.title')),
           h('span', { key: 'hint' }, t('empty.hint')),
           capabilities.managed === true
@@ -2087,7 +2087,7 @@ window.__ModuleLoader__.load({
             : null,
         ]))
       } else {
-        body.push(h('div', { key: 'list', className: 'mcp-hub-list' }, servers.map((server) =>
+        body.push(h('div', { key: 'list', className: 'mcp-manage-list' }, servers.map((server) =>
           h(ManagedCard, {
             key: server.name,
             server,
@@ -2117,16 +2117,16 @@ window.__ModuleLoader__.load({
       }
 
       if (staticServers.length > 0) {
-        body.push(h('details', { key: 'static', className: 'mcp-hub-section' }, [
+        body.push(h('details', { key: 'static', className: 'mcp-manage-section' }, [
           h('summary', { key: 'summary' }, [
-            h('span', { key: 'title', className: 'mcp-hub-section-title' }, t('static.title')),
-            h('span', { key: 'count', className: 'mcp-hub-section-count' }, String(staticServers.length)),
+            h('span', { key: 'title', className: 'mcp-manage-section-title' }, t('static.title')),
+            h('span', { key: 'count', className: 'mcp-manage-section-count' }, String(staticServers.length)),
           ]),
-          h('p', { key: 'lead', className: 'mcp-hub-section-lead' }, t('static.lead')),
+          h('p', { key: 'lead', className: 'mcp-manage-section-lead' }, t('static.lead')),
           capabilities.staticEditable === true
             ? null
-            : h('p', { key: 'capability', className: 'mcp-hub-note' }, t('capability.unavailable')),
-          h('div', { key: 'list', className: 'mcp-hub-list' }, staticServers.map((server) =>
+            : h('p', { key: 'capability', className: 'mcp-manage-note' }, t('capability.unavailable')),
+          h('div', { key: 'list', className: 'mcp-manage-list' }, staticServers.map((server) =>
             h(StaticCard, {
               key: server.entryId,
               server,
@@ -2162,9 +2162,9 @@ window.__ModuleLoader__.load({
             }))),
         ]))
       } else {
-        body.push(h('details', { key: 'static', className: 'mcp-hub-section' }, [
-          h('summary', { key: 'summary' }, h('span', { key: 'title', className: 'mcp-hub-section-title' }, t('static.title'))),
-          h('p', { key: 'empty', className: 'mcp-hub-empty-tools' }, t('static.empty')),
+        body.push(h('details', { key: 'static', className: 'mcp-manage-section' }, [
+          h('summary', { key: 'summary' }, h('span', { key: 'title', className: 'mcp-manage-section-title' }, t('static.title'))),
+          h('p', { key: 'empty', className: 'mcp-manage-empty-tools' }, t('static.empty')),
         ]))
       }
 
@@ -2179,13 +2179,13 @@ window.__ModuleLoader__.load({
       }))
 
       if (Array.isArray(state.warnings) && state.warnings.length > 0) {
-        body.push(h('div', { key: 'warnings', className: 'mcp-hub-warnings' }, [
+        body.push(h('div', { key: 'warnings', className: 'mcp-manage-warnings' }, [
           h('span', { key: 'title', style: { fontWeight: 600 } }, t('warn.title')),
           ...state.warnings.map((warning, index) => h('span', { key: index }, warning)),
         ]))
       }
 
-      body.push(h('div', { key: 'note', className: 'mcp-hub-footer-note' }, [
+      body.push(h('div', { key: 'note', className: 'mcp-manage-footer-note' }, [
         h('div', { key: 'where' }, [
           h('strong', { key: 'title' }, t('note.title') + '：'),
           h('span', { key: 'text' }, t('note.body')),
@@ -2218,7 +2218,7 @@ window.__ModuleLoader__.load({
         }))
       }
 
-      return h('div', { className: 'mcp-hub' }, [...body, ...overlay])
+      return h('div', { className: 'mcp-manage' }, [...body, ...overlay])
     }
 
     function ConfirmDialog({ title, body, danger, confirmLabel, busy, onClose, onConfirm }) {
@@ -2244,22 +2244,22 @@ window.__ModuleLoader__.load({
           h('button', {
             key: 'cancel',
             type: 'button',
-            className: 'mcp-hub-btn',
+            className: 'mcp-manage-btn',
             disabled,
             onClick: onClose,
           }, t('action.cancel')),
           h('button', {
             key: 'confirm',
             type: 'button',
-            className: 'mcp-hub-btn',
+            className: 'mcp-manage-btn',
             'data-variant': danger ? 'danger' : 'primary',
             disabled,
             onClick: confirm,
           }, confirmLabel),
         ],
       }, [
-        h('p', { key: 'body', className: 'mcp-hub-confirm-body' }, body),
-        error !== '' ? h('div', { key: 'error', className: 'mcp-hub-form-error', role: 'alert' }, error) : null,
+        h('p', { key: 'body', className: 'mcp-manage-confirm-body' }, body),
+        error !== '' ? h('div', { key: 'error', className: 'mcp-manage-form-error', role: 'alert' }, error) : null,
       ])
     }
 
@@ -2269,7 +2269,7 @@ window.__ModuleLoader__.load({
 
     function apply(ctx) {
       installStyles()
-      ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'dsh-mcp-hub: dictionary')
+      ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'dsh-mcp-manage: dictionary')
       translate = ctx.locale.bind(NS)
       const bump = () => {
         localeVersion += 1
@@ -2280,11 +2280,11 @@ window.__ModuleLoader__.load({
         ctx.effect(() => {
           const off = ctx.locale.subscribe(bump)
           return () => { if (typeof off === 'function') off() }
-        }, 'dsh-mcp-hub: locale changes')
+        }, 'dsh-mcp-manage: locale changes')
       }
       ctx.slots.inject('settings.section', () => ctx.slots.register({
         name: 'settings.section',
-        id: 'mcp-hub',
+        id: 'mcp-manage',
         order: 30,
         label: () => translate('nav'),
         locale: NS,
@@ -2292,7 +2292,7 @@ window.__ModuleLoader__.load({
 
       // The global panel is always composed; the sidebar entry that opens it
       // is the preference the user controls from the page.
-      ctx.slots.inject('main', () => ctx.slots.register({ name: 'main', key: 'mcp-hub' }, HubPage))
+      ctx.slots.inject('main', () => ctx.slots.register({ name: 'main', key: 'mcp-manage' }, HubPage))
 
       let launcherDispose = null
       let launcherOn = false
@@ -2303,7 +2303,7 @@ window.__ModuleLoader__.load({
         if (next) {
           launcherDispose = ctx.slots.inject('sidebar.panellist', () => ctx.slots.register({
             name: 'sidebar.panellist',
-            id: 'mcp-hub',
+            id: 'mcp-manage',
             order: 25,
             label: () => translate('nav'),
             locale: NS,
@@ -2323,7 +2323,7 @@ window.__ModuleLoader__.load({
           launcherDispose = null
         }
         launcherOn = false
-      }, 'dsh-mcp-hub: sidebar shortcut lifetime')
+      }, 'dsh-mcp-manage: sidebar shortcut lifetime')
       // Register synchronously from the last browser-local choice, then
       // reconcile with the Host preference. The Host can still be starting
       // when a client row materializes, so the read retries for a moment.
